@@ -30,13 +30,13 @@
     return s.options[answers[id]].label;
   }
 
-  // {id} → resposta; *x* → destaque; [x] → caixa; (x) → círculo
+  // {id} → resposta; *x* → destaque; [x] → caixa; (x) → sublinhado
   function rich(str) {
     var out = esc(String(str || '').replace(/\{([\w-]+)\}/g, function (_, id) { return answerLabel(id) || '—'; }));
     return out
       .replace(/\*(.+?)\*/g, '<em>$1</em>')
       .replace(/\[(.+?)\]/g, '<span class="box">$1</span>')
-      .replace(/\((.+?)\)/g, '<span class="ring">$1' + DD.ring + '</span>');
+      .replace(/\((.+?)\)/g, '<span class="mark">$1</span>');
   }
 
   function track(event, data) {
@@ -51,53 +51,50 @@
     try { if (navigator.vibrate) navigator.vibrate(8); } catch (e) {}
   }
 
-  /* ---------- peças visuais ---------- */
+  /* ---------- ícones (traço) ---------- */
 
-  var SHAPES = {
-    asterisk:
-      '<rect x="37" y="0" width="26" height="100" rx="4"/>' +
-      '<rect x="37" y="0" width="26" height="100" rx="4" transform="rotate(60 50 50)"/>' +
-      '<rect x="37" y="0" width="26" height="100" rx="4" transform="rotate(120 50 50)"/>',
-    eight: '<ellipse cx="50" cy="29" rx="44" ry="29"/><ellipse cx="50" cy="71" rx="44" ry="29"/>',
-    arch: '<path d="M8 100V46a42 42 0 0 1 84 0v54z"/>',
-    clover:
-      '<circle cx="50" cy="27" r="27"/><circle cx="27" cy="50" r="27"/>' +
-      '<circle cx="73" cy="50" r="27"/><circle cx="50" cy="73" r="27"/><circle cx="50" cy="50" r="30"/>',
-    circle: '<circle cx="50" cy="50" r="50"/>'
+  function bars(n) {
+    return [4, 8, 12, 16].map(function (h, i) {
+      return '<rect x="' + (3 + i * 5) + '" y="' + (20 - h) + '" width="3" height="' + h + '" rx="1" fill="currentColor" stroke="none"' + (i < n ? '' : ' opacity=".22"') + '/>';
+    }).join('');
+  }
+
+  var ICONS = {
+    instagram: '<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r=".6" fill="currentColor"/>',
+    tiktok: '<path d="M14 3v11.5a3.5 3.5 0 1 1-3.5-3.5"/><path d="M14 3c.4 2.6 2.4 4.6 5 5"/>',
+    layers: '<path d="M12 3 2.5 8 12 13l9.5-5z"/><path d="M2.5 13 12 18l9.5-5"/>',
+    globe: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18 14 14 0 0 1 0-18z"/>',
+    coin: '<circle cx="12" cy="12" r="9"/><path d="M14.8 9.3c-.4-.8-1.4-1.3-2.8-1.3-1.7 0-2.8.8-2.8 2s1.1 1.7 2.8 2 2.8.8 2.8 2-1.1 2-2.8 2c-1.4 0-2.4-.5-2.8-1.3M12 6.5v1.5M12 16v1.5"/>',
+    cash: '<rect x="2.5" y="6" width="19" height="12" rx="2"/><circle cx="12" cy="12" r="2.6"/><path d="M6 9.5v5M18 9.5v5"/>',
+    wallet: '<path d="M19 7V5.5A1.5 1.5 0 0 0 17.5 4h-12A2.5 2.5 0 0 0 3 6.5v11A2.5 2.5 0 0 0 5.5 20H20a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1H5.5"/><path d="M16.5 13.5h1"/>',
+    trending: '<path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/>',
+    bars1: bars(1), bars2: bars(2), bars3: bars(3), bars4: bars(4),
+    fileX: '<path d="M14 3H6.5A2.5 2.5 0 0 0 4 5.5v13A2.5 2.5 0 0 0 6.5 21h11a2.5 2.5 0 0 0 2.5-2.5V9z"/><path d="M14 3v6h6"/><path d="M10 13l4 4M14 13l-4 4"/>',
+    help: '<circle cx="12" cy="12" r="9"/><path d="M9.6 9.2a2.5 2.5 0 1 1 3.4 2.4c-.6.3-1 .8-1 1.5v.4"/><circle cx="12" cy="16.8" r=".6" fill="currentColor"/>',
+    monitor: '<rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/>',
+    link: '<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',
+    folder: '<path d="M3 7.5A2.5 2.5 0 0 1 5.5 5H9l2 2h7.5A2.5 2.5 0 0 1 21 9.5v8a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 17.5z"/>',
+    phone: '<rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M11 18h2"/>',
+    checkCircle: '<circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.7 2.7L16 9.5"/>',
+    target: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/>',
+    unlock: '<rect x="4.5" y="11" width="15" height="10" rx="2"/><path d="M8 11V7.5a4 4 0 0 1 7.6-1.7"/><path d="M12 15v2"/>',
+    briefcase: '<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7M3 12.5h18"/>',
+    shield: '<path d="M12 3l7.5 3v5.5c0 4.5-3.2 8.2-7.5 9.5-4.3-1.3-7.5-5-7.5-9.5V6z"/><path d="M8.8 12.2l2.2 2.2 4.2-4.4"/>',
+    arrow: '<path d="M5 12h14M13 6l6 6-6 6"/>',
+    down: '<path d="M12 5v14M6 13l6 6 6-6"/>',
+    back: '<path d="M19 12H5M11 6l-6 6 6 6"/>',
+    check: '<path d="M6 12.5l4 4 8-9"/>',
+    x: '<path d="M7 7l10 10M17 7 7 17"/>'
   };
 
-  function face(f) {
-    return /\.(png|jpe?g|webp|gif|svg)$/i.test(f)
-      ? '<img class="blob__img" src="' + esc(f) + '" alt="">'
-      : '<span class="blob__face">' + f + '</span>';
+  function icon(name, cls) {
+    return '<svg class="ico ' + (cls || '') + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (ICONS[name] || '') + '</svg>';
   }
 
-  function blob(shape, fill, f, cls) {
-    return '<div class="blob ' + (cls || '') + '" aria-hidden="true">' +
-      '<svg viewBox="0 0 100 100" fill="' + fill + '">' + SHAPES[shape] + '</svg>' + face(f) + '</div>';
-  }
+  var WA = '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2c-1.6 0-3.1-.4-4.4-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.3-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4.1-.7.3-.2.3-.9.9-.9 2.2s.9 2.5 1.1 2.7c.1.2 1.8 2.8 4.4 3.9 1.6.7 2.3.8 3.1.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3z"/></svg>';
 
   function wordmark() {
     return '<div class="wordmark"><span class="wordmark__dot"></span>' + esc(C.brand) + '</div>';
-  }
-
-  var DD = {
-    spark: '<svg class="dd dd--spark" viewBox="0 0 60 60" aria-hidden="true"><path d="M12 16 46 44M44 14 16 46" stroke="var(--blue-300)" stroke-width="9" stroke-linecap="round" fill="none"/><circle cx="52" cy="7" r="5" fill="none" stroke="var(--blue-300)" stroke-width="3"/></svg>',
-    plane: '<svg class="dd dd--plane" viewBox="0 0 80 70" aria-hidden="true"><path d="M6 26 58 6 44 44 34 32Z M34 32 58 6" fill="#fff" stroke="var(--ink)" stroke-width="1.6" stroke-linejoin="round"/><path d="M40 48c-2 10-10 16-24 18" fill="none" stroke="var(--ink)" stroke-width="1.4" stroke-dasharray="3 4" stroke-linecap="round"/></svg>',
-    phone: '<svg class="dd dd--phone" viewBox="0 0 60 90" aria-hidden="true"><rect x="8" y="4" width="44" height="82" rx="9" fill="#fff" stroke="var(--ink)" stroke-width="1.6"/><path d="M24 11h12" stroke="var(--ink)" stroke-width="1.6" stroke-linecap="round"/><path d="M30 57c-11-8-12-19-5-21 3-1 5 2 5 4 0-2 2-5 5-4 7 2 6 13-5 21z" fill="var(--blue)"/><path d="M18 74h24" stroke="var(--blue-200)" stroke-width="3" stroke-linecap="round"/></svg>',
-    ring: '<svg class="ring__svg" viewBox="0 0 120 80" preserveAspectRatio="none" aria-hidden="true"><path d="M98 16C78 0 20 4 9 34c-9 28 52 46 92 30 21-9 17-38-11-50" fill="none" stroke="var(--blue)" stroke-width="3" stroke-linecap="round" vector-effect="non-scaling-stroke" pathLength="1"/></svg>',
-    arrow: '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
-    down: '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
-    back: '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
-    check: '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 12.5l4 4 8-9" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>',
-    x: '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7l10 10M17 7 7 17" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>',
-    wa: '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2c-1.6 0-3.1-.4-4.4-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.3-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4.1-.7.3-.2.3-.9.9-.9 2.2s.9 2.5 1.1 2.7c.1.2 1.8 2.8 4.4 3.9 1.6.7 2.3.8 3.1.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3z"/></svg>'
-  };
-
-  function dots(list) {
-    return list.map(function (d) {
-      return '<i class="dot" style="top:' + d[0] + ';left:' + d[1] + ';--d:' + d[2] + 'px;background:' + d[3] + ';animation-delay:' + (d[4] || 0) + 's"></i>';
-    }).join('');
   }
 
   /* ---------- blocos de conteúdo ---------- */
@@ -106,68 +103,57 @@
     kicker: function (b) { return '<p class="kicker">' + rich(b.text) + '</p>'; },
     title: function (b) { return '<h2 class="title' + (b.size ? ' title--' + b.size : '') + '">' + rich(b.text) + '</h2>'; },
     lead: function (b) { return '<p class="lead">' + rich(b.text) + '</p>'; },
-    p: function (b) { return '<p class="p' + (b.center ? ' is-center' : '') + '">' + rich(b.text) + '</p>'; },
-    big: function (b) { return '<p class="big' + (b.center ? ' is-center' : '') + '">' + rich(b.text) + '</p>'; },
+    p: function (b) { return '<p class="p">' + rich(b.text) + '</p>'; },
+    big: function (b) { return '<p class="big">' + rich(b.text) + '</p>'; },
     divider: function () { return '<hr class="divider">'; },
-
-    money: function (b) {
-      return '<div class="money"><div class="money__ticket">' +
-        '<span class="money__pre">' + esc(b.pre) + '</span>' +
-        '<span class="money__val">' + esc(b.value) + '</span>' +
-        '<span class="money__suf">' + esc(b.suffix) + '</span>' +
-        '</div>' + DD.spark + '</div>';
-    },
 
     checks: function (b) {
       var v = b.variant || 'yes';
-      var icon = v === 'no' ? DD.x : DD.check;
+      var ic = icon(v === 'no' ? 'x' : 'check');
       return '<ul class="checks checks--' + v + '">' + b.items.map(function (t, i) {
-        return '<li style="--i:' + i + '"><span class="checks__ico">' + icon + '</span><span>' + rich(t) + '</span></li>';
+        return '<li style="--i:' + i + '"><span class="checks__ico">' + ic + '</span><span>' + rich(t) + '</span></li>';
       }).join('') + '</ul>';
     },
 
     steps: function (b) {
       return '<ol class="steps">' + b.items.map(function (t, i) {
-        return '<li style="--i:' + i + '"><span class="steps__n">' + (i + 1) + '</span><span>' + rich(t) + '</span></li>';
+        return '<li style="--i:' + i + '"><span class="steps__n">' + (i + 1) + '</span><span class="steps__t">' + rich(t) + '</span></li>';
       }).join('') + '</ol>';
     },
 
     quote: function (b) {
       return '<div class="chat">' +
-        (b.pre ? '<p class="chat__pre">' + rich(b.pre) + '</p>' : '') +
-        '<div class="chat__row">' +
-          '<span class="chat__av">' + blob('circle', 'var(--blue)', '🏷️') + '</span>' +
-          '<div class="chat__bubble"><small>' + esc(b.from) + '</small>' +
-            '<span class="chat__typing" aria-hidden="true"><i></i><i></i><i></i></span>' +
-            '<span class="chat__text">' + rich(b.text) + '</span>' +
-          '</div>' +
+        (b.pre ? '<p class="p">' + rich(b.pre) + '</p>' : '') +
+        '<div class="chat__bubble">' +
+          '<span class="chat__from">' + icon('briefcase') + esc(b.from) + '</span>' +
+          '<span class="chat__typing" aria-hidden="true"><i></i><i></i><i></i></span>' +
+          '<span class="chat__text">“' + rich(b.text) + '”</span>' +
         '</div></div>';
     },
 
     versus: function (b) {
       return '<div class="versus">' +
-        (b.pre ? '<p class="versus__label">' + rich(b.pre) + '</p>' : '') +
+        (b.pre ? '<p class="p">' + rich(b.pre) + '</p>' : '') +
         '<div class="versus__card versus__card--from">' + rich(b.from) + '</div>' +
-        '<div class="versus__mid">' + DD.down + (b.mid ? '<span>' + rich(b.mid) + '</span>' : '') + '</div>' +
-        '<div class="versus__card versus__card--to">' + rich(b.to) + DD.spark + '</div>' +
+        '<div class="versus__mid">' + icon('down') + (b.mid ? '<span>' + rich(b.mid) + '</span>' : '') + '</div>' +
+        '<div class="versus__card versus__card--to">' + rich(b.to) + '</div>' +
         '</div>';
     },
 
     features: function (b) {
       return '<ul class="features">' + b.items.map(function (f, i) {
-        return '<li style="--i:' + i + '"><span class="tile">' + f.icon + '</span>' +
-          '<span><b>' + rich(f.title) + '</b><small>' + rich(f.text) + '</small></span></li>';
+        return '<li style="--i:' + i + '"><span class="tile">' + icon(f.icon) + '</span>' +
+          '<b>' + rich(f.title) + '</b><small>' + rich(f.text) + '</small></li>';
       }).join('') + '</ul>';
     },
 
     stat: function (b) {
       return '<div class="stat">' +
-        '<span class="stat__label">📱 ' + rich(b.label) + '</span>' +
+        '<span class="stat__label">' + icon('phone') + rich(b.label) + '</span>' +
         (b.pre ? '<span class="stat__pre">' + rich(b.pre) + '</span>' : '') +
         '<span class="stat__value">' + esc(b.value) + '</span>' +
         '<span class="stat__unit">' + rich(b.unit) + '</span>' +
         (b.text ? '<p class="stat__text">' + rich(b.text) + '</p>' : '') +
-        dots([['9%', '90%', 10, 'var(--blue-300)'], ['22%', '80%', 6, '#fff', 1]]) +
         '</div>';
     },
 
@@ -178,13 +164,11 @@
     },
 
     brand: function () {
-      return '<div class="brandmark"><span class="brandmark__a">Postou</span><span class="box">ganhou</span></div>';
+      return '<div class="brandmark"><span>Postou</span><span class="box">ganhou</span></div>';
     },
 
     art: function (b) {
-      return '<div class="art' + (b.confetti ? ' art--confetti' : '') + '">' +
-        dots([['8%', '22%', 9, 'var(--blue-300)'], ['70%', '16%', 7, 'var(--blue)', 1], ['16%', '76%', 8, 'var(--blue)', 2], ['78%', '80%', 11, 'var(--blue-200)', .6]]) +
-        blob(b.shape || 'circle', b.fill || 'var(--blue)', b.emoji, 'art__main') + DD.spark + '</div>';
+      return '<div class="badge' + (b.solid ? ' badge--solid' : '') + '">' + icon(b.icon) + '</div>';
     }
   };
 
@@ -201,16 +185,16 @@
     var showBack = !step.noBack;
     return '<header class="qbar">' +
       (showBack
-        ? '<button class="iconbtn" data-action="back" aria-label="Voltar">' + DD.back + '</button>'
+        ? '<button class="iconbtn" data-action="back" aria-label="Voltar">' + icon('back') + '</button>'
         : '<span class="iconbtn iconbtn--ghost"></span>') +
       '<div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + pct + '"><span style="width:' + pct + '%"></span></div>' +
       '<span class="qbar__count">' + (qi !== -1 ? (qi + 1) + '/' + questionSteps.length : '') + '</span>' +
       '</header>';
   }
 
-  function stickyCta(label, attrs, extraCls, note, icon) {
+  function stickyCta(label, attrs, note) {
     return '<div class="sticky-cta">' +
-      '<button class="btn ' + (extraCls || '') + '" ' + attrs + '>' + esc(label) + (icon || DD.arrow) + '</button>' +
+      '<button class="btn" ' + attrs + '>' + esc(label) + icon('arrow') + '</button>' +
       (note ? '<p class="note">' + rich(note) + '</p>' : '') + '</div>';
   }
 
@@ -224,12 +208,11 @@
     return '<section class="screen hero">' +
       '<header class="hero__top">' + wordmark() + '</header>' +
       '<div class="hero__stage">' +
-        dots([['4%', '46%', 9, 'var(--blue-300)'], ['46%', '1%', 8, 'var(--blue)', 1], ['56%', '95%', 7, 'var(--blue-300)', 2], ['92%', '28%', 6, 'var(--blue)', .5], ['88%', '70%', 10, 'var(--blue-200)', 1.5]]) +
         (s.kicker ? '<p class="hero__kicker">' + rich(s.kicker) + '</p>' : '') +
-        '<h1 class="hl">' + hl + DD.spark + DD.plane + '</h1>' +
+        '<h1 class="hl">' + hl + '</h1>' +
       '</div>' +
       '<div class="content">' + renderBlocks(s.blocks) + '</div>' +
-      stickyCta(s.cta, 'data-action="next"', 'btn--pill') +
+      stickyCta(s.cta, 'data-action="next"', s.ctaNote) +
     '</section>';
   }
 
@@ -238,16 +221,15 @@
     var opts = s.options.map(function (o, i) {
       var on = sel === i;
       return '<button class="opt' + (on ? ' is-on' : '') + '" data-action="pick" data-i="' + i + '" role="radio" aria-checked="' + on + '" style="--i:' + i + '">' +
-        '<span class="tile">' + o.icon + '</span>' +
+        '<span class="tile">' + icon(o.icon) + '</span>' +
         '<span class="opt__label">' + esc(o.label) + '</span>' +
-        '<span class="opt__check">' + DD.check + '</span>' +
+        '<span class="opt__check">' + icon('check') + '</span>' +
       '</button>';
     }).join('');
     return '<section class="screen q">' + topbar(s) +
       '<div class="content">' + renderBlocks(s.blocks) +
         '<div class="opts' + (s.layout === 'grid' ? ' opts--grid' : '') + '" role="radiogroup">' + opts + '</div>' +
       '</div>' +
-      '<div class="q__deco" aria-hidden="true">' + blob('arch', 'var(--blue-100)', '', 'q__av--1') + DD.spark + blob('asterisk', 'var(--blue-200)', '', 'q__av--2') + '</div>' +
     '</section>';
   }
 
@@ -262,28 +244,21 @@
     return '<section class="screen loading">' +
       '<header class="hero__top">' + wordmark() + '</header>' +
       '<div class="ld">' +
-        '<div class="ld__art">' +
-          dots([['6%', '14%', 9, 'var(--blue-300)'], ['76%', '6%', 7, 'var(--blue)', 1], ['12%', '86%', 8, 'var(--blue)', 2]]) +
-          blob('clover', 'var(--blue-100)', '⚙️', 'ld__blob') +
-        '</div>' +
-        '<h2 class="title title--center">' + rich(s.title) + '</h2>' +
+        '<div class="badge badge--spin">' + icon('shield') + '</div>' +
+        '<h2 class="title">' + rich(s.title) + '</h2>' +
         '<ul class="ld__list">' + s.items.map(function (t) {
-          return '<li><span class="ld__tick">' + DD.check + '</span><span>' + rich(t) + '</span></li>';
+          return '<li><span class="ld__tick">' + icon('check') + '</span><span>' + rich(t) + '</span></li>';
         }).join('') + '</ul>' +
-        '<div class="ld__bar"><span></span></div>' +
-        '<div class="ld__foot"><span>' + esc(s.wait || '') + '</span><b class="ld__pct">0%</b></div>' +
+        '<div class="ld__meter"><b class="ld__pct">0%</b><div class="ld__bar"><span></span></div><span class="ld__wait">' + esc(s.wait || '') + '</span></div>' +
       '</div>' +
     '</section>';
   }
 
   function viewFinal(s) {
     return '<section class="screen info final">' + topbar(s) +
-      '<div class="content">' +
-        '<div class="blk" style="--i:0">' + BLOCKS.art({ shape: 'asterisk', emoji: '🚀', fill: 'var(--blue)', confetti: true }) + '</div>' +
-        renderBlocks(s.blocks) +
-      '</div>' +
+      '<div class="content">' + renderBlocks(s.blocks) + '</div>' +
       '<div class="sticky-cta">' +
-        '<a class="btn btn--wa btn--pulse" data-action="whatsapp" href="' + esc(waLink()) + '" target="_blank" rel="noopener">' + DD.wa + esc(s.cta) + '</a>' +
+        '<a class="btn btn--wa" data-action="whatsapp" href="' + esc(waLink()) + '" target="_blank" rel="noopener">' + WA + esc(s.cta) + '</a>' +
         (s.note ? '<p class="note">' + rich(s.note) + '</p>' : '') +
       '</div>' +
     '</section>';

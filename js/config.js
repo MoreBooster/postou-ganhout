@@ -4,12 +4,12 @@
  * Marcações de texto:
  *   *texto*   → destaque em azul (itálico nos títulos)
  *   [texto]   → texto dentro da "caixa" azul
- *   (texto)   → círculo desenhado à mão em volta (use em títulos curtos)
+ *   (texto)   → sublinhado azul (use em títulos curtos)
  *   {id}      → resposta dada na pergunta com esse id (ex.: {rede})
  *
  * Blocos disponíveis (campo `t`):
  *   kicker, title, lead, p, big, money, checks, steps, quote,
- *   versus, features, stat, highlight, tags, art, brand, divider
+ *   versus, features, stat, highlight, tags, art (ícone), brand, divider
  */
 window.QUIZ_CONFIG = {
   brand: 'postou ganhou',
@@ -26,7 +26,7 @@ window.QUIZ_CONFIG = {
     {
       id: 'ataque',
       type: 'intro',
-      kicker: '📲 Você tem Instagram ou TikTok?',
+      kicker: 'Você tem Instagram ou TikTok?',
       // size: 'money' → linha do valor em destaque | 'sm' → linha menor
       headline: ['Ganhe até', { text: '[R$300,00]', size: 'money' }, 'por dia', { text: '*apenas postando*', size: 'sm' }, '(vídeo.)'],
       blocks: [
@@ -46,17 +46,17 @@ window.QUIZ_CONFIG = {
       blocks: [{ t: 'title', text: 'Qual desses você *já tem?*' }],
       layout: 'grid',
       options: [
-        { icon: '📸', label: 'Instagram' },
-        { icon: '🎵', label: 'TikTok' },
-        { icon: '✌️', label: 'Os dois' },
-        { icon: '🌐', label: 'Outra rede social' }
+        { icon: 'instagram', label: 'Instagram' },
+        { icon: 'tiktok', label: 'TikTok' },
+        { icon: 'layers', label: 'Os dois' },
+        { icon: 'globe', label: 'Outra rede social' }
       ]
     },
     {
       id: 'rede-ok',
       type: 'info',
       blocks: [
-        { t: 'art', shape: 'asterisk', emoji: '👏', fill: 'var(--blue)' },
+        { t: 'art', icon: 'checkCircle', solid: true },
         { t: 'title', size: 'xl', text: '[Ótimo.]' },
         { t: 'lead', text: 'Então você já tem *uma das ferramentas* necessárias para começar.' },
         { t: 'highlight', text: 'Mas existe uma segunda parte que muita gente ainda não conhece.' }
@@ -73,19 +73,19 @@ window.QUIZ_CONFIG = {
         { t: 'title', text: 'Qual seria sua *primeira meta?*' }
       ],
       options: [
-        { icon: '🪙', label: 'R$100 por dia' },
-        { icon: '💵', label: 'R$200 por dia' },
-        { icon: '💰', label: 'R$300 por dia' },
-        { icon: '🚀', label: 'Quero ir além' }
+        { icon: 'coin', label: 'R$100 por dia' },
+        { icon: 'cash', label: 'R$200 por dia' },
+        { icon: 'wallet', label: 'R$300 por dia' },
+        { icon: 'trending', label: 'Quero ir além' }
       ]
     },
     {
       id: 'meta-ok',
       type: 'info',
       blocks: [
-        { t: 'art', shape: 'clover', emoji: '🎯', fill: 'var(--blue-200)' },
+        { t: 'art', icon: 'target' },
         { t: 'title', size: 'xl', text: 'Meta *registrada.*' },
-        { t: 'tags', items: ['🎯 {meta}'] },
+        { t: 'tags', items: ['{meta}'] },
         { t: 'lead', text: 'Agora precisamos verificar uma coisa *importante* sobre seu perfil.' }
       ],
       cta: 'Verificar'
@@ -97,17 +97,17 @@ window.QUIZ_CONFIG = {
       type: 'question',
       blocks: [{ t: 'title', text: 'Quantos seguidores você tem *hoje?*' }],
       options: [
-        { icon: '🌱', label: 'Até 1.000' },
-        { icon: '🌿', label: '1.000 a 5.000' },
-        { icon: '🌳', label: '5.000 a 10.000' },
-        { icon: '🔥', label: '+10.000' }
+        { icon: 'bars1', label: 'Até 1.000' },
+        { icon: 'bars2', label: '1.000 a 5.000' },
+        { icon: 'bars3', label: '5.000 a 10.000' },
+        { icon: 'bars4', label: '+10.000' }
       ]
     },
     {
       id: 'seguidores-ok',
       type: 'info',
       blocks: [
-        { t: 'art', shape: 'eight', emoji: '📈', fill: 'var(--blue-200)' },
+        { t: 'art', icon: 'trending' },
         { t: 'title', text: 'Isso *não te impede* de começar.' },
         { t: 'p', text: 'Você não precisa necessariamente ser um grande influencer para trabalhar como creator.' },
         { t: 'p', text: 'Marcas também podem buscar *pessoas comuns* para produzir e divulgar conteúdos.' },
@@ -121,16 +121,16 @@ window.QUIZ_CONFIG = {
       id: 'portfolio',
       type: 'question',
       blocks: [
-        { t: 'kicker', text: '🔔 Nova notificação' },
+        { t: 'kicker', text: 'Nova mensagem' },
         { t: 'title', size: 'sm', text: 'Uma marca acabou de se interessar pelo *seu conteúdo.*' },
         { t: 'quote', from: 'Marca parceira', pre: 'E pergunta:', text: 'Posso ver seu portfólio?' },
         { t: 'big', text: 'O que você mandaria agora?' }
       ],
       options: [
-        { icon: '📸', label: 'Meu Instagram' },
-        { icon: '🎵', label: 'Meu TikTok' },
-        { icon: '🫥', label: 'Não tenho portfólio' },
-        { icon: '🤔', label: 'Não sei o que mandar' }
+        { icon: 'instagram', label: 'Meu Instagram' },
+        { icon: 'tiktok', label: 'Meu TikTok' },
+        { icon: 'fileX', label: 'Não tenho portfólio' },
+        { icon: 'help', label: 'Não sei o que mandar' }
       ]
     },
 
@@ -174,9 +174,9 @@ window.QUIZ_CONFIG = {
         {
           t: 'features',
           items: [
-            { icon: '🖥️', title: 'Seu próprio site', text: 'Sua vitrine profissional como creator.' },
-            { icon: '🔗', title: 'Seu próprio domínio', text: 'Um endereço para apresentar seu trabalho.' },
-            { icon: '🗂️', title: 'Seu portfólio digital', text: 'Seus conteúdos organizados profissionalmente.' }
+            { icon: 'monitor', title: 'Seu próprio site', text: 'Sua vitrine profissional como creator.' },
+            { icon: 'link', title: 'Seu próprio domínio', text: 'Um endereço para apresentar seu trabalho.' },
+            { icon: 'folder', title: 'Seu portfólio digital', text: 'Seus conteúdos organizados profissionalmente.' }
           ]
         },
         { t: 'p', text: 'E o principal:' },
@@ -217,7 +217,7 @@ window.QUIZ_CONFIG = {
       type: 'info',
       noBack: true,
       blocks: [
-        { t: 'art', shape: 'arch', emoji: '🔓', fill: 'var(--blue)', confetti: true },
+        { t: 'art', icon: 'unlock', solid: true },
         { t: 'title', text: 'Seu próximo passo está *liberado.*' },
         { t: 'p', text: 'Pelas suas respostas, você já possui *o básico necessário* para começar a estruturar sua presença como creator.' },
         { t: 'p', text: 'Agora você pode conhecer a estrutura da:' },
@@ -234,10 +234,11 @@ window.QUIZ_CONFIG = {
       id: 'cta',
       type: 'final',
       blocks: [
+        { t: 'art', icon: 'shield', solid: true },
         { t: 'checks', variant: 'big', items: ['Você já posta.', 'Você já tem o celular.', 'Você já tem a rede social.'] },
         { t: 'title', text: 'Agora falta transformar isso em uma *estrutura de creator.*' },
         { t: 'p', text: 'Clique abaixo e fale com nossa equipe para conhecer as condições e liberar sua estrutura *Postou Ganhou.*' },
-        { t: 'tags', items: ['🖥️ Site', '🔗 Domínio', '🗂️ Portfólio', '📱 App Postou Ganhou'] }
+        { t: 'tags', items: ['Site', 'Domínio', 'Portfólio', 'App Postou Ganhou'] }
       ],
       cta: 'Resgatar meu acesso agora',
       note: 'Você será direcionado para o WhatsApp.'
