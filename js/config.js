@@ -7,10 +7,6 @@
  *   [texto]   → texto dentro da caixa laranja
  *   (texto)   → sublinhado azul (use em títulos curtos)
  *   {id}      → resposta dada na pergunta com esse id (ex.: {rede})
- *   {sim}     → valor atual do simulador | {simtotal} → valor máximo do simulador
- *
- * Simulador de potencial: o campo `sim` de cada etapa soma R$/dia no contador do topo
- * quando a pessoa conclui a etapa. É uma simulação ilustrativa e aparece identificada assim.
  *
  * Blocos disponíveis (campo `t`):
  *   kicker, title, lead, p, big, checks, steps, quote, versus, features,
@@ -62,7 +58,6 @@ window.QUIZ_CONFIG = {
     /* PERGUNTA 1 — MICROCOMPROMISSO */
     {
       id: 'rede',
-      sim: 60,
       type: 'question',
       blocks: [{ t: 'title', text: 'Qual desses você *já tem?*' }],
       layout: 'grid',
@@ -79,7 +74,6 @@ window.QUIZ_CONFIG = {
     /* PERGUNTA 2 — DINHEIRO */
     {
       id: 'meta',
-      sim: 80,
       type: 'question',
       tone: 'money',
       blocks: [
@@ -98,7 +92,6 @@ window.QUIZ_CONFIG = {
     /* PERGUNTA 3 — OBJEÇÃO DOS SEGUIDORES */
     {
       id: 'seguidores',
-      sim: 60,
       type: 'question',
       blocks: [{ t: 'title', text: 'Quantos seguidores você tem *hoje?*' }],
       options: [
@@ -113,7 +106,6 @@ window.QUIZ_CONFIG = {
     /* PERGUNTA 4 — GAP */
     {
       id: 'portfolio',
-      sim: 60,
       type: 'question',
       blocks: [
         { t: 'kicker', text: 'Nova mensagem' },
@@ -133,7 +125,6 @@ window.QUIZ_CONFIG = {
     /* O PROBLEMA — dor + segundo gap */
     {
       id: 'problema',
-      sim: 20,
       type: 'info',
       blocks: [
         { t: 'title', text: 'É aqui que muita gente *perde força.*' },
@@ -164,7 +155,6 @@ window.QUIZ_CONFIG = {
     /* A SOLUÇÃO — big reveal + visualização */
     {
       id: 'solucao',
-      sim: 20,
       type: 'info',
       blocks: [
         { t: 'kicker', text: 'Conheça a' },
@@ -182,7 +172,7 @@ window.QUIZ_CONFIG = {
         { t: 'stat', label: 'E o principal: o app', pre: 'Um ecossistema com', value: '+1.000', unit: 'marcas brasileiras', text: 'e oportunidades para creators encontrarem campanhas e trabalhos disponíveis na plataforma.' },
         { t: 'title', size: 'sm', text: 'Imagina abrir o *celular…*' },
         { t: 'steps', items: ['Encontrar oportunidades de marcas.', 'Escolher campanhas compatíveis com seu perfil.', 'Usar seu portfólio para se apresentar.', 'Produzir e publicar seu conteúdo.', 'E poder ser ^remunerado^ pelas campanhas em que participar.'] },
-        { t: 'big', text: 'Você já tem o celular, a rede social e sabe postar. Agora falta *profissionalizar essa porra.*' }
+        { t: 'big', text: 'Você já tem o celular, a rede social e sabe postar. Agora só falta *se profissionalizar.*' }
       ],
       cta: 'Preparar minha estrutura'
     },
@@ -204,7 +194,6 @@ window.QUIZ_CONFIG = {
       noBack: true,
       blocks: [
         { t: 'art', icon: 'trophy', solid: true, celebrate: true, achievement: 'Nível Creator' },
-        { t: 'tags', accent: true, items: ['Potencial simulado: {sim}/dia'] },
         { t: 'title', text: 'Seu próximo passo está *liberado.*' },
         { t: 'p', text: 'Pelas suas respostas, você já possui *o básico necessário* para começar a estruturar sua presença como creator.' },
         {
@@ -230,8 +219,7 @@ window.QUIZ_CONFIG = {
             }
           ]
         },
-        { t: 'p', text: 'Clique abaixo e fale com nossa equipe para conhecer as condições e liberar sua estrutura *Postou Ganhou.*' },
-        { t: 'disclaimer', text: 'O valor do simulador é uma simulação ilustrativa feita a partir das suas respostas. Não é garantia de ganho: a remuneração depende das campanhas disponíveis e das que você participar.' }
+        { t: 'p', text: 'Clique abaixo e fale com nossa equipe para conhecer as condições e liberar sua estrutura *Postou Ganhou.*' }
       ],
       cta: 'Resgatar meu acesso agora',
       note: 'Você será direcionado para o WhatsApp.'

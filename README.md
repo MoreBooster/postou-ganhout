@@ -25,11 +25,8 @@ Cada tela é um item de `steps` em `js/config.js`, formado por blocos (`title`, 
 - `(texto)` → sublinhado laranja
 - `^texto^` → laranja forte (valores em dinheiro)
 - `{rede}` / `{meta}` → mostra a resposta da pessoa
-- `{sim}` / `{simtotal}` → valor atual / valor máximo do simulador
 
 ## Gamificação
-
-**Simulador de potencial:** o contador do topo soma R$/dia a cada etapa concluída, conforme o campo `sim` de cada etapa no `js/config.js` (hoje 60 + 80 + 60 + 60 + 20 + 20 = R$ 300/dia). Ele aparece sempre identificado como simulação, e a tela final traz um aviso de que não é garantia de ganho. Mantenha esse aviso.
 
 **Avisos de resposta:** o campo `feedback` de cada pergunta mostra um aviso rápido que avança sozinho.
 

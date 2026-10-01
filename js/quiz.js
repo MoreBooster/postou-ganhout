@@ -7,15 +7,9 @@
   var answers = {};
   var current = 0;
 
-  // gamificação: simulador de potencial (R$/dia) — cada etapa soma o valor do campo `sim` no config.
-  // É uma simulação ilustrativa, sempre identificada como tal na tela.
-  var sim = 0;
-  var awarded = {};
   var lastPct = 0;
   var reduceMotion = false;
   try { reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
-  var simTotal = C.steps.reduce(function (t, s) { return t + (s.sim || 0); }, 0);
-  function brl(n) { return 'R$ ' + String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '.'); }
   var busy = false;
 
   var progressSteps = steps.filter(function (s) { return s.type !== 'intro' && s.type !== 'loading'; });
@@ -43,8 +37,6 @@
   // {id} → resposta; *x* → destaque; ^x^ → verde; [x] → caixa; (x) → sublinhado
   function rich(str) {
     var out = esc(String(str || '').replace(/\{([\w-]+)\}/g, function (_, id) {
-      if (id === 'sim') return brl(sim);
-      if (id === 'simtotal') return brl(simTotal);
       return answerLabel(id) || '—';
     }));
     return out
@@ -130,7 +122,6 @@
     p: function (b) { return '<p class="p">' + rich(b.text) + '</p>'; },
     big: function (b) { return '<p class="big">' + rich(b.text) + '</p>'; },
     divider: function () { return '<hr class="divider">'; },
-    disclaimer: function (b) { return '<p class="disclaimer">' + rich(b.text) + '</p>'; },
 
     checks: function (b) {
       var v = b.variant || 'yes';
@@ -233,9 +224,7 @@
         ? '<button class="iconbtn" data-action="back" aria-label="Voltar">' + icon('back') + '</button>'
         : '<span class="iconbtn iconbtn--ghost"></span>') +
       '<div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + pct + '"><span style="width:' + lastPct + '%" data-to="' + pct + '"></span></div>' +
-      '<span class="xp" aria-label="Simulador de potencial: ' + brl(sim) + ' por dia (simulação)">' +
-        '<span class="xp__coin" aria-hidden="true">$</span>' +
-        '<span class="xp__txt"><b class="xp__n">' + brl(sim) + '</b><small>simulação/dia</small></span></span>' +
+      '<span class="qbar__count">' + (qi !== -1 ? (qi + 1) + '/' + questionSteps.length : '') + '</span>' +
       '</header>';
   }
 
@@ -278,7 +267,7 @@
     var qi = questionSteps.indexOf(s);
     return '<section class="screen q' + (s.tone ? ' q--' + s.tone : '') + '">' + topbar(s) +
       '<div class="content">' +
-        '<p class="phase">' + icon('flame') + 'Fase ' + (qi + 1) + ' de ' + questionSteps.length + (s.sim ? '<b>+' + brl(s.sim) + '/dia</b>' : '') + '</p>' +
+        '<p class="phase">' + icon('flame') + 'Fase ' + (qi + 1) + ' de ' + questionSteps.length + '</p>' +
         renderBlocks(s.blocks) +
         '<div class="opts' + (s.layout === 'grid' ? ' opts--grid' : '') + '" role="radiogroup">' + opts + '</div>' +
       '</div>' +
@@ -327,7 +316,7 @@
 
   /* ---------- navegação ---------- */
 
-  function render(i, dir, gain) {
+  function render(i, dir) {
     current = i;
     var s = steps[i];
     app.innerHTML = VIEWS[s.type](s);
@@ -341,7 +330,6 @@
       requestAnimationFrame(function () { requestAnimationFrame(function () { bar.style.width = bar.getAttribute('data-to') + '%'; }); });
       lastPct = Number(bar.getAttribute('data-to'));
     }
-    if (gain) bumpXp(gain);
     if (s.type === 'intro') countUpMoney();
     var cel = app.querySelector('[data-celebrate]');
     if (cel) setTimeout(function () { burstFrom(cel, 46); }, 350);
@@ -365,17 +353,6 @@
     requestAnimationFrame(f);
   }
 
-  function bumpXp(gain) {
-    var chip = app.querySelector('.xp');
-    if (!chip) return;
-    countTo(chip.querySelector('.xp__n'), sim - gain, sim, 900, brl);
-    chip.classList.remove('is-bump'); void chip.offsetWidth; chip.classList.add('is-bump');
-    var f = document.createElement('span');
-    f.className = 'xp__float';
-    f.textContent = '+' + brl(gain) + '/dia';
-    chip.appendChild(f);
-    setTimeout(function () { f.remove(); }, 1300);
-  }
 
   function countUpMoney() {
     var el = app.querySelector('.hl__line--money .box');
@@ -414,21 +391,13 @@
       if (opts.replace) history.replaceState({ step: i }, '');
       else history.pushState({ step: i }, '');
     } catch (e) {}
-    render(i, opts.dir, opts.gain);
-  }
-
-  function award(step) {
-    var v = step.sim || 0;
-    if (!v || awarded[step.id]) return 0;
-    awarded[step.id] = v;
-    sim += v;
-    return v;
+    render(i, opts.dir);
   }
 
   function next() {
     if (busy || current >= steps.length - 1) return;
     busy = true;
-    goTo(current + 1, { gain: award(steps[current]) });
+    goTo(current + 1);
   }
 
   window.addEventListener('popstate', function (e) {
@@ -480,7 +449,7 @@
     t.style.setProperty('--dur', dur + 'ms');
     t.innerHTML = '<span class="toast__ico">' + icon('check') + '</span>' +
       '<span class="toast__body"><b>' + rich(s.feedback.title) + '</b><span>' + rich(s.feedback.text) + '</span></span>' +
-      (s.sim ? '<span class="toast__xp">+' + brl(s.sim) + '/dia<small>no simulador</small></span>' : '') + '<i class="toast__timer"></i>';
+      '<i class="toast__timer"></i>';
     app.firstElementChild.appendChild(t);
     return dur;
   }
