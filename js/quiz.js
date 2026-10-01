@@ -147,7 +147,7 @@
 
     strip: function (b) {
       return '<div class="strip">' + b.items.map(function (o) {
-        return '<div class="strip__item"><b>' + esc(o.value) + '</b><span>' + esc(o.label) + '</span></div>';
+        return '<div class="strip__item"><b>' + rich(o.value) + '</b><span>' + rich(o.label) + '</span></div>';
       }).join('') + '</div>';
     },
 

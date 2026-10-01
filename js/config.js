@@ -50,8 +50,7 @@ window.QUIZ_CONFIG = {
               ]
             }
           ]
-        },
-        { t: 'strip', items: [{ value: '4', label: 'fases' }, { value: '1 min', label: 'para jogar' }, { value: '{xptotal}', label: 'XP para ganhar' }] }
+        }
       ],
       cta: 'Quero fazer R$300/dia',
       ctaNote: 'Responda 4 perguntas e veja como entrar nesse mercado.'
