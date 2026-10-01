@@ -82,6 +82,12 @@
     briefcase: '<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7M3 12.5h18"/>',
     shield: '<path d="M12 3l7.5 3v5.5c0 4.5-3.2 8.2-7.5 9.5-4.3-1.3-7.5-5-7.5-9.5V6z"/><path d="M8.8 12.2l2.2 2.2 4.2-4.4"/>',
     arrow: '<path d="M5 12h14M13 6l6 6-6 6"/>',
+    arrowDown: '<path d="M12 5v14M6 13l6 6 6-6"/>',
+    star: '<path d="M12 3.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/>',
+    users: '<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14a6.5 6.5 0 0 1 3.5 6"/>',
+    clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+    lock: '<rect x="4.5" y="11" width="15" height="10" rx="2"/><path d="M8 11V7.5a4 4 0 0 1 8 0V11"/>',
+    video: '<rect x="2.5" y="6" width="13" height="12" rx="2.5"/><path d="M15.5 10.5 21 7.5v9l-5.5-3"/>',
     down: '<path d="M12 5v14M6 13l6 6 6-6"/>',
     back: '<path d="M19 12H5M11 6l-6 6 6 6"/>',
     check: '<path d="M6 12.5l4 4 8-9"/>',
@@ -110,15 +116,28 @@
 
     checks: function (b) {
       var v = b.variant || 'yes';
-      var ic = icon(v === 'no' ? 'x' : 'check');
-      return '<ul class="checks checks--' + v + '">' + b.items.map(function (t, i) {
-        return '<li style="--i:' + i + '"><span class="checks__ico">' + ic + '</span><span>' + rich(t) + '</span></li>';
+      return '<ul class="checks checks--' + v + '">' + b.items.map(function (it, i) {
+        var o = typeof it === 'string' ? { text: it } : it;
+        var ic = icon(o.icon || (v === 'no' ? 'x' : 'check'));
+        return '<li style="--i:' + i + '"><span class="checks__ico">' + ic + '</span><span class="checks__t">' + rich(o.text) + '</span></li>';
       }).join('') + '</ul>';
+    },
+
+    group: function (b) {
+      return '<div class="group' + (b.tone ? ' group--' + b.tone : '') + '">' +
+        (b.label ? '<p class="group__label">' + rich(b.label) + '</p>' : '') +
+        renderBlocks(b.blocks) + '</div>';
+    },
+
+    strip: function (b) {
+      return '<div class="strip">' + b.items.map(function (o) {
+        return '<div class="strip__item"><b>' + esc(o.value) + '</b><span>' + esc(o.label) + '</span></div>';
+      }).join('') + '</div>';
     },
 
     steps: function (b) {
       return '<ol class="steps">' + b.items.map(function (t, i) {
-        return '<li style="--i:' + i + '"><span class="steps__n">' + (i + 1) + '</span><span class="steps__t">' + rich(t) + '</span></li>';
+        return '<li style="--i:' + i + '"><span class="steps__n">' + String(i + 1).padStart(2, '0') + '</span><span class="steps__t">' + rich(t) + '</span></li>';
       }).join('') + '</ol>';
     },
 
@@ -134,10 +153,9 @@
 
     versus: function (b) {
       return '<div class="versus">' +
-        (b.pre ? '<p class="p">' + rich(b.pre) + '</p>' : '') +
-        '<div class="versus__card versus__card--from">' + rich(b.from) + '</div>' +
-        '<div class="versus__mid">' + icon('down') + (b.mid ? '<span>' + rich(b.mid) + '</span>' : '') + '</div>' +
-        '<div class="versus__card versus__card--to">' + rich(b.to) + '</div>' +
+        '<div class="versus__card versus__card--from"><small>' + rich(b.pre || '') + '</small><span>' + rich(b.from) + '</span></div>' +
+        '<span class="versus__arrow">' + icon('arrow') + '</span>' +
+        '<div class="versus__card versus__card--to"><small>' + rich(b.mid || '') + '</small><span>' + rich(b.to) + '</span></div>' +
         '</div>';
     },
 
@@ -158,14 +176,18 @@
         '</div>';
     },
 
-    highlight: function (b) { return '<div class="highlight">' + rich(b.text) + '</div>'; },
+    highlight: function (b) {
+      return '<div class="highlight' + (b.solid ? ' highlight--solid' : '') + '">' +
+        (b.icon ? '<span class="highlight__ico">' + icon(b.icon) + '</span>' : '') +
+        '<span>' + rich(b.text) + '</span></div>';
+    },
 
     tags: function (b) {
       return '<div class="tags' + (b.green ? ' tags--green' : '') + '">' + b.items.map(function (t) { return '<span class="tag">' + rich(t) + '</span>'; }).join('') + '</div>';
     },
 
-    brand: function () {
-      return '<div class="brandmark"><span>Postou</span><span class="box">ganhou</span></div>';
+    brand: function (b) {
+      return '<div class="brandmark' + (b.size ? ' brandmark--' + b.size : '') + '"><span>Postou</span><span class="box">ganhou</span></div>';
     },
 
     art: function (b) {
@@ -207,7 +229,7 @@
       return '<span class="hl__line' + (o.size ? ' hl__line--' + o.size : '') + '" style="--i:' + i + '">' + rich(o.text) + '</span>';
     }).join('');
     return '<section class="screen hero">' +
-      '<header class="hero__top">' + wordmark() + '</header>' +
+      '<header class="hero__top">' + wordmark() + '<span class="hero__time">' + icon('clock') + '1 min</span></header>' +
       '<div class="hero__stage">' +
         (s.kicker ? '<p class="hero__kicker">' + rich(s.kicker) + '</p>' : '') +
         '<h1 class="hl">' + hl + '</h1>' +
@@ -247,10 +269,12 @@
       '<div class="ld">' +
         '<div class="badge badge--spin">' + icon('shield') + '</div>' +
         '<h2 class="title">' + rich(s.title) + '</h2>' +
-        '<ul class="ld__list">' + s.items.map(function (t) {
-          return '<li><span class="ld__tick">' + icon('check') + '</span><span>' + rich(t) + '</span></li>';
-        }).join('') + '</ul>' +
-        '<div class="ld__meter"><b class="ld__pct">0%</b><div class="ld__bar"><span></span></div><span class="ld__wait">' + esc(s.wait || '') + '</span></div>' +
+        '<div class="group">' +
+          '<ul class="ld__list">' + s.items.map(function (t) {
+            return '<li><span class="ld__tick">' + icon('check') + '</span><span>' + rich(t) + '</span></li>';
+          }).join('') + '</ul>' +
+          '<div class="ld__meter"><div class="ld__row"><span class="ld__wait">' + esc(s.wait || '') + '</span><b class="ld__pct">0%</b></div><div class="ld__bar"><span></span></div></div>' +
+        '</div>' +
       '</div>' +
     '</section>';
   }
