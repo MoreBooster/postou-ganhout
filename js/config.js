@@ -21,21 +21,18 @@ window.QUIZ_CONFIG = {
   // Opcional: URL que recebe as respostas via POST (JSON) ao clicar no CTA final
   webhookUrl: '',
 
-  // Avatares usados nas formas orgânicas (emoji ou caminho de imagem, ex.: 'img/creator1.png')
-  avatars: ['🧑🏻‍🦰', '👩🏾‍🦱', '👩🏼', '🧑🏽'],
-
   steps: [
     /* TELA 01 — ATAQUE */
     {
       id: 'ataque',
       type: 'intro',
-      headline: ['Você tem', '[Instagram]', 'ou (TikTok)?'],
+      kicker: '📲 Você tem Instagram ou TikTok?',
+      // size: 'money' → linha do valor em destaque | 'sm' → linha menor
+      headline: ['Ganhe até', { text: '[R$300,00]', size: 'money' }, 'por dia', { text: '*apenas postando*', size: 'sm' }, '(vídeo.)'],
       blocks: [
         { t: 'lead', text: 'Então talvez esteja deixando *dinheiro na mesa* toda vez que posta um vídeo.' },
         { t: 'divider' },
         { t: 'big', text: 'Marcas pagam creators para *postar conteúdos.*' },
-        { t: 'p', text: 'E algumas oportunidades podem chegar a:' },
-        { t: 'money', pre: 'até', value: 'R$300', suffix: 'por dia' },
         { t: 'checks', items: ['Sem precisar ser famoso.', 'Sem precisar ter 100 mil seguidores.', 'Sem precisar viver de internet.'] },
         { t: 'p', center: true, text: 'Responda *4 perguntas* e veja como entrar nesse mercado.' }
       ],
@@ -110,7 +107,7 @@ window.QUIZ_CONFIG = {
       id: 'seguidores-ok',
       type: 'info',
       blocks: [
-        { t: 'art', kind: 'avatars' },
+        { t: 'art', shape: 'eight', emoji: '📈', fill: 'var(--blue-200)' },
         { t: 'title', text: 'Isso *não te impede* de começar.' },
         { t: 'p', text: 'Você não precisa necessariamente ser um grande influencer para trabalhar como creator.' },
         { t: 'p', text: 'Marcas também podem buscar *pessoas comuns* para produzir e divulgar conteúdos.' },

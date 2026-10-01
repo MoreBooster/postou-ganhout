@@ -77,8 +77,6 @@
       '<svg viewBox="0 0 100 100" fill="' + fill + '">' + SHAPES[shape] + '</svg>' + face(f) + '</div>';
   }
 
-  function av(i) { return (C.avatars || [])[i] || '🙂'; }
-
   function wordmark() {
     return '<div class="wordmark"><span class="wordmark__dot"></span>' + esc(C.brand) + '</div>';
   }
@@ -184,14 +182,6 @@
     },
 
     art: function (b) {
-      if (b.kind === 'avatars') {
-        return '<div class="art art--group">' +
-          dots([['10%', '10%', 8, 'var(--blue-300)'], ['78%', '88%', 10, 'var(--blue)', 1], ['18%', '90%', 6, 'var(--blue)', 2]]) +
-          blob('arch', 'var(--blue-100)', av(2), 'art__av art__av--1') +
-          blob('asterisk', 'var(--blue)', av(0), 'art__av art__av--2') +
-          blob('eight', 'var(--blue-200)', av(1), 'art__av art__av--3') +
-          DD.plane + '</div>';
-      }
       return '<div class="art' + (b.confetti ? ' art--confetti' : '') + '">' +
         dots([['8%', '22%', 9, 'var(--blue-300)'], ['70%', '16%', 7, 'var(--blue)', 1], ['16%', '76%', 8, 'var(--blue)', 2], ['78%', '80%', 11, 'var(--blue-200)', .6]]) +
         blob(b.shape || 'circle', b.fill || 'var(--blue)', b.emoji, 'art__main') + DD.spark + '</div>';
@@ -228,18 +218,15 @@
 
   function viewIntro(s) {
     var hl = s.headline.map(function (l, i) {
-      return '<span class="hl__line" style="--i:' + i + '">' + rich(l) + '</span>';
+      var o = typeof l === 'string' ? { text: l } : l;
+      return '<span class="hl__line' + (o.size ? ' hl__line--' + o.size : '') + '" style="--i:' + i + '">' + rich(o.text) + '</span>';
     }).join('');
     return '<section class="screen hero">' +
       '<header class="hero__top">' + wordmark() + '</header>' +
       '<div class="hero__stage">' +
         dots([['4%', '46%', 9, 'var(--blue-300)'], ['46%', '1%', 8, 'var(--blue)', 1], ['56%', '95%', 7, 'var(--blue-300)', 2], ['92%', '28%', 6, 'var(--blue)', .5], ['88%', '70%', 10, 'var(--blue-200)', 1.5]]) +
-        blob('asterisk', 'var(--blue)', av(0), 'hero__av hero__av--1') +
-        blob('eight', 'var(--blue-200)', av(1), 'hero__av hero__av--2') +
-        blob('arch', 'var(--blue-100)', av(2), 'hero__av hero__av--3') +
-        blob('clover', 'var(--blue-300)', av(3), 'hero__av hero__av--4') +
+        (s.kicker ? '<p class="hero__kicker">' + rich(s.kicker) + '</p>' : '') +
         '<h1 class="hl">' + hl + DD.spark + DD.plane + '</h1>' +
-        DD.phone +
       '</div>' +
       '<div class="content">' + renderBlocks(s.blocks) + '</div>' +
       stickyCta(s.cta, 'data-action="next"', 'btn--pill') +
@@ -260,7 +247,7 @@
       '<div class="content">' + renderBlocks(s.blocks) +
         '<div class="opts' + (s.layout === 'grid' ? ' opts--grid' : '') + '" role="radiogroup">' + opts + '</div>' +
       '</div>' +
-      '<div class="q__deco" aria-hidden="true">' + blob('arch', 'var(--blue-100)', av(2), 'q__av--1') + DD.spark + blob('asterisk', 'var(--blue-200)', av(3), 'q__av--2') + '</div>' +
+      '<div class="q__deco" aria-hidden="true">' + blob('arch', 'var(--blue-100)', '', 'q__av--1') + DD.spark + blob('asterisk', 'var(--blue-200)', '', 'q__av--2') + '</div>' +
     '</section>';
   }
 

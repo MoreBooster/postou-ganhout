@@ -15,7 +15,6 @@ js/quiz.js        → motor do funil (não precisa mexer)
 
 1. Em `js/config.js`, troque `whatsappNumber` pelo número da equipe (DDI + DDD + número, só dígitos).
 2. (Opcional) Preencha `webhookUrl` para receber as respostas (Make, Zapier, n8n…) quando a pessoa clica no botão final.
-3. (Opcional) Troque os emojis de `avatars` por fotos PNG com fundo transparente (ex.: `img/creator1.png`) para ficar ainda mais próximo da referência.
 
 ## Como editar textos
 

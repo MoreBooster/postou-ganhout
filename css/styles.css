@@ -181,16 +181,19 @@ em { font-style: italic; color: var(--blue); }
 /* ============ HERO (tela 01) ============ */
 .hero__stage {
   position: relative;
-  padding: 86px 0 76px;
+  display: flex; flex-direction: column; align-items: center;
+  padding: 26px 0 18px;
   text-align: center;
 }
-.hero__av { position: absolute; animation: pop .7s var(--ease) both; }
-.hero__av--1 { --s: 92px; top: 6px; left: -16px; animation-delay: .1s; }
-.hero__av--2 { --s: 84px; top: 0; right: -12px; animation-delay: .2s; }
-.hero__av--3 { --s: 78px; bottom: 0; left: -6px; animation-delay: .3s; }
-.hero__av--4 { --s: 84px; bottom: -4px; right: -14px; animation-delay: .4s; }
-.hero__av > svg { animation: spin 26s linear infinite; }
-.hero__av--2 > svg, .hero__av--3 > svg { animation: none; }
+.hero__kicker {
+  margin: 0 0 18px;
+  padding: 9px 16px;
+  border-radius: 999px;
+  background: var(--blue-100);
+  color: var(--blue-600);
+  font-size: 15px; font-weight: 700;
+  animation: pop .6s var(--ease) both;
+}
 @keyframes spin { to { transform: rotate(360deg); } }
 @keyframes pop { from { opacity: 0; transform: scale(.6) rotate(-8deg); } to { opacity: 1; transform: none; } }
 
@@ -199,17 +202,27 @@ em { font-style: italic; color: var(--blue); }
   display: inline-flex; flex-direction: column; align-items: center;
   margin: 0;
   font-family: var(--serif);
-  font-weight: 400;
-  font-size: clamp(48px, 14.5vw, 72px);
+  font-weight: 500;
+  font-size: clamp(46px, 14vw, 70px);
   line-height: .98;
   letter-spacing: -.04em;
   font-variation-settings: 'opsz' 144, 'SOFT' 30, 'WONK' 1;
 }
 .hl__line { display: block; animation: up .7s var(--ease) both; animation-delay: calc(var(--i) * 110ms); }
 .hl .box { margin: .1em 0 .08em; padding: .04em .24em .14em; }
-.hl .dd--spark { width: 40px; top: -4px; right: -46px; animation: pop .7s .5s var(--ease) both; }
-.hl .dd--plane { width: 54px; top: 26%; right: -42px; transform: rotate(6deg); }
-.hero__stage .dd--phone { width: 34px; bottom: 6px; left: 50%; transform: translateX(-50%) rotate(-10deg); animation: float 4s ease-in-out infinite; }
+.hl__line--sm { font-size: .64em; line-height: 1.1; margin-top: .12em; }
+.hl__line--money { white-space: nowrap; }
+.hl__line--money .box {
+  font-size: clamp(54px, 16.5vw, 84px);
+  font-weight: 600;
+  margin: .12em 0 .1em;
+  transform: rotate(-2.5deg);
+  box-shadow: 0 0 0 .06em #fff, 0 0 0 .09em var(--ink), 0 18px 34px -14px rgba(47, 107, 255, .75);
+  animation: punch 1.8s 1s ease-in-out infinite;
+}
+@keyframes punch { 0%, 100% { transform: rotate(-2.5deg) scale(1); } 50% { transform: rotate(-2.5deg) scale(1.04); } }
+.hl .dd--spark { width: 40px; top: -14px; left: -40px; animation: pop .7s .5s var(--ease) both; }
+.hl .dd--plane { width: 50px; top: 46%; right: -38px; transform: rotate(6deg); }
 
 .hero .content { gap: 14px; padding-top: 14px; }
 
@@ -403,12 +416,6 @@ em { font-style: italic; color: var(--blue); }
 .art__main { --s: 128px; animation: pop .7s var(--ease) both; }
 .art .dd--spark { width: 40px; top: 6px; right: 26%; }
 .art--confetti .dot { animation: float 3s ease-in-out infinite; }
-.art--group { height: 160px; }
-.art__av { position: absolute; animation: pop .7s var(--ease) both; }
-.art__av--1 { --s: 96px; left: 4%; top: 34px; animation-delay: .05s; }
-.art__av--2 { --s: 112px; left: 50%; top: 0; margin-left: -56px; animation-delay: .15s; }
-.art__av--3 { --s: 92px; right: 4%; top: 40px; animation-delay: .25s; }
-.art--group .dd--plane { width: 46px; right: 0; top: 0; }
 
 /* ============ Question screen ============ */
 .qbar {
@@ -564,11 +571,12 @@ em { font-style: italic; color: var(--blue); }
 
 /* ============ Ajustes de telas pequenas ============ */
 @media (max-height: 700px) {
-  .hero__stage { padding: 70px 0 64px; }
-  .hero__av--1 { --s: 78px; }
-  .hero__av--2 { --s: 72px; }
-  .hero__av--3 { --s: 66px; }
-  .hero__av--4 { --s: 70px; }
+  .hero__stage { padding: 16px 0 12px; }
+}
+@media (max-width: 380px) {
+  .hero__kicker { font-size: 13.5px; padding: 8px 13px; }
+  .btn--pill { font-size: 15px; padding-left: 18px; }
+  .btn--pill .ico { width: 42px; height: 42px; padding: 11px; }
 }
 @media (max-width: 350px) {
   :root { --gutter: 16px; }
