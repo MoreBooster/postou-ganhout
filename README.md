@@ -20,11 +20,17 @@ js/quiz.js        → motor do funil (não precisa mexer)
 
 Cada tela é um item de `steps` em `js/config.js`, formado por blocos (`title`, `p`, `checks`, `highlight`…).
 
-- `*texto*` → destaque azul
-- `[texto]` → texto dentro da caixa azul
-- `(texto)` → sublinhado azul
-- `^texto^` → verde de ganho (valores em dinheiro)
+- `*texto*` → destaque laranja
+- `[texto]` → texto dentro da caixa laranja
+- `(texto)` → sublinhado laranja
+- `^texto^` → laranja forte (valores em dinheiro)
 - `{rede}` / `{meta}` → mostra a resposta da pessoa
+- `{xp}` / `{xptotal}` → XP acumulado / XP máximo do funil
+
+## Gamificação
+
+Cada pergunta vale 100 XP e cada tela de conteúdo vale 25 XP (ajuste em `XP`, no topo do `js/quiz.js`).
+Nos blocos `art`, use `achievement: 'Texto do selo'` e `celebrate: true` para disparar confete.
 
 ## Rastreamento
 

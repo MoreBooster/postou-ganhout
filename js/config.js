@@ -3,10 +3,11 @@
  *
  * Marcações de texto:
  *   *texto*   → destaque em azul
- *   ^texto^   → verde de ganho (valores em dinheiro)
- *   [texto]   → texto dentro da caixa (verde na capa)
+ *   ^texto^   → destaque laranja forte (valores em dinheiro)
+ *   [texto]   → texto dentro da caixa laranja
  *   (texto)   → sublinhado azul (use em títulos curtos)
  *   {id}      → resposta dada na pergunta com esse id (ex.: {rede})
+ *   {xp}      → XP acumulado | {xptotal} → XP máximo do funil
  *
  * Blocos disponíveis (campo `t`):
  *   kicker, title, lead, p, big, checks, steps, quote, versus, features,
@@ -50,7 +51,7 @@ window.QUIZ_CONFIG = {
             }
           ]
         },
-        { t: 'strip', items: [{ value: '4', label: 'perguntas' }, { value: '1 min', label: 'para responder' }, { value: 'Na hora', label: 'seu resultado' }] }
+        { t: 'strip', items: [{ value: '4', label: 'fases' }, { value: '1 min', label: 'para jogar' }, { value: '{xptotal}', label: 'XP para ganhar' }] }
       ],
       cta: 'Quero fazer R$300/dia',
       ctaNote: 'Responda 4 perguntas e veja como entrar nesse mercado.'
@@ -73,7 +74,7 @@ window.QUIZ_CONFIG = {
       id: 'rede-ok',
       type: 'info',
       blocks: [
-        { t: 'art', icon: 'checkCircle', solid: true, green: true },
+        { t: 'art', icon: 'checkCircle', solid: true, celebrate: true, achievement: 'Conquista desbloqueada' },
         { t: 'title', size: 'xl', text: 'Ótimo.' },
         { t: 'lead', text: 'Então você já tem *uma das ferramentas* necessárias para começar.' },
         { t: 'highlight', icon: 'lock', text: 'Mas existe uma segunda parte que muita gente ainda não conhece.' }
@@ -85,7 +86,7 @@ window.QUIZ_CONFIG = {
     {
       id: 'meta',
       type: 'question',
-      tone: 'green',
+      tone: 'money',
       blocks: [
         { t: 'kicker', text: 'Se você recebesse por conteúdo…' },
         { t: 'title', text: 'Qual seria sua *primeira meta?*' }
@@ -101,9 +102,9 @@ window.QUIZ_CONFIG = {
       id: 'meta-ok',
       type: 'info',
       blocks: [
-        { t: 'art', icon: 'target', green: true },
+        { t: 'art', icon: 'target', solid: true, celebrate: true, achievement: 'Meta definida' },
         { t: 'title', size: 'xl', text: 'Meta *registrada.*' },
-        { t: 'tags', green: true, items: ['{meta}'] },
+        { t: 'tags', accent: true, items: ['{meta}'] },
         { t: 'lead', text: 'Agora precisamos verificar uma coisa *importante* sobre seu perfil.' }
       ],
       cta: 'Verificar'
@@ -125,7 +126,7 @@ window.QUIZ_CONFIG = {
       id: 'seguidores-ok',
       type: 'info',
       blocks: [
-        { t: 'art', icon: 'trending' },
+        { t: 'art', icon: 'trending', achievement: 'Obstáculo superado' },
         { t: 'title', text: 'Isso *não te impede* de começar.' },
         {
           t: 'group',
@@ -278,7 +279,8 @@ window.QUIZ_CONFIG = {
       type: 'info',
       noBack: true,
       blocks: [
-        { t: 'art', icon: 'unlock', solid: true, green: true },
+        { t: 'art', icon: 'unlock', solid: true, celebrate: true, achievement: 'Nível desbloqueado' },
+        { t: 'tags', accent: true, items: ['+{xp} XP acumulados'] },
         { t: 'title', text: 'Seu próximo passo está *liberado.*' },
         { t: 'p', text: 'Pelas suas respostas, você já possui *o básico necessário* para começar a estruturar sua presença como creator.' },
         {
@@ -307,6 +309,7 @@ window.QUIZ_CONFIG = {
       id: 'cta',
       type: 'final',
       blocks: [
+        { t: 'art', icon: 'trophy', solid: true, celebrate: true, achievement: 'Nível Creator' },
         {
           t: 'checks', variant: 'tiles',
           items: [

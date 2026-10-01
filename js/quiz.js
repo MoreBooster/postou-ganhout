@@ -6,6 +6,15 @@
   var steps = C.steps;
   var answers = {};
   var current = 0;
+
+  // gamificação: XP por etapa concluída
+  var XP = { question: 100, info: 25 };
+  var xp = 0;
+  var awarded = {};
+  var lastPct = 0;
+  var reduceMotion = false;
+  try { reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
+  var xpTotal = C.steps.reduce(function (t, s) { return t + (XP[s.type] || 0); }, 0);
   var busy = false;
 
   var progressSteps = steps.filter(function (s) { return s.type !== 'intro' && s.type !== 'loading'; });
@@ -32,7 +41,11 @@
 
   // {id} → resposta; *x* → destaque; ^x^ → verde; [x] → caixa; (x) → sublinhado
   function rich(str) {
-    var out = esc(String(str || '').replace(/\{([\w-]+)\}/g, function (_, id) { return answerLabel(id) || '—'; }));
+    var out = esc(String(str || '').replace(/\{([\w-]+)\}/g, function (_, id) {
+      if (id === 'xp') return String(xp);
+      if (id === 'xptotal') return String(xpTotal);
+      return answerLabel(id) || '—';
+    }));
     return out
       .replace(/\*(.+?)\*/g, '<em>$1</em>')
       .replace(/\^(.+?)\^/g, '<span class="g">$1</span>')
@@ -83,6 +96,9 @@
     shield: '<path d="M12 3l7.5 3v5.5c0 4.5-3.2 8.2-7.5 9.5-4.3-1.3-7.5-5-7.5-9.5V6z"/><path d="M8.8 12.2l2.2 2.2 4.2-4.4"/>',
     arrow: '<path d="M5 12h14M13 6l6 6-6 6"/>',
     arrowDown: '<path d="M12 5v14M6 13l6 6 6-6"/>',
+    trophy: '<path d="M8 4h8v5a4 4 0 0 1-8 0z"/><path d="M8 6H4.5v1.5A3.5 3.5 0 0 0 8 11M16 6h3.5v1.5A3.5 3.5 0 0 1 16 11"/><path d="M12 13v4M8.5 20.5h7M9.5 17h5v3.5h-5z"/>',
+    zap: '<path d="M13 2.5 4.5 13.5H12l-1 8 8.5-11H12z"/>',
+    flame: '<path d="M12 21.5c-4 0-6.5-2.7-6.5-6.2 0-3.6 2.6-5.4 3.6-8.3.6 1.6 1.6 2.6 2.6 3 .3-3 1.8-5.2 3.4-6.5.3 3 3.4 5.4 3.4 10.3 0 4.6-2.8 7.7-6.5 7.7z"/>',
     star: '<path d="M12 3.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/>',
     users: '<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14a6.5 6.5 0 0 1 3.5 6"/>',
     clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
@@ -183,7 +199,7 @@
     },
 
     tags: function (b) {
-      return '<div class="tags' + (b.green ? ' tags--green' : '') + '">' + b.items.map(function (t) { return '<span class="tag">' + rich(t) + '</span>'; }).join('') + '</div>';
+      return '<div class="tags' + (b.accent ? ' tags--accent' : '') + '">' + b.items.map(function (t) { return '<span class="tag">' + rich(t) + '</span>'; }).join('') + '</div>';
     },
 
     brand: function (b) {
@@ -191,7 +207,11 @@
     },
 
     art: function (b) {
-      return '<div class="badge' + (b.solid ? ' badge--solid' : '') + (b.green ? ' badge--green' : '') + '">' + icon(b.icon) + '</div>';
+      var badge = '<div class="badge' + (b.solid ? ' badge--solid' : '') + '"' + (b.celebrate ? ' data-celebrate' : '') + '>' +
+        '<span class="badge__ring"></span>' + icon(b.icon) + '</div>';
+      if (!b.achievement) return badge;
+      return '<div class="achv">' + badge +
+        '<span class="achv__label">' + icon('trophy') + esc(b.achievement) + '</span></div>';
     }
   };
 
@@ -210,8 +230,8 @@
       (showBack
         ? '<button class="iconbtn" data-action="back" aria-label="Voltar">' + icon('back') + '</button>'
         : '<span class="iconbtn iconbtn--ghost"></span>') +
-      '<div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + pct + '"><span style="width:' + pct + '%"></span></div>' +
-      '<span class="qbar__count">' + (qi !== -1 ? (qi + 1) + '/' + questionSteps.length : '') + '</span>' +
+      '<div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + pct + '"><span style="width:' + lastPct + '%" data-to="' + pct + '"></span></div>' +
+      '<span class="xp" aria-label="Pontos de experiência">' + icon('zap') + '<b class="xp__n">' + xp + '</b><small>XP</small></span>' +
       '</header>';
   }
 
@@ -232,7 +252,9 @@
       '<header class="hero__top">' + wordmark() + '<span class="hero__time">' + icon('clock') + '1 min</span></header>' +
       '<div class="hero__stage">' +
         (s.kicker ? '<p class="hero__kicker">' + rich(s.kicker) + '</p>' : '') +
-        '<h1 class="hl">' + hl + '</h1>' +
+        '<h1 class="hl">' + hl +
+          '<span class="coin coin--1" aria-hidden="true">$</span><span class="coin coin--2" aria-hidden="true">$</span><span class="coin coin--3" aria-hidden="true">$</span>' +
+        '</h1>' +
       '</div>' +
       '<div class="content">' + renderBlocks(s.blocks) + '</div>' +
       stickyCta(s.cta, 'data-action="next"', s.ctaNote) +
@@ -249,8 +271,11 @@
         '<span class="opt__check">' + icon('check') + '</span>' +
       '</button>';
     }).join('');
+    var qi = questionSteps.indexOf(s);
     return '<section class="screen q' + (s.tone ? ' q--' + s.tone : '') + '">' + topbar(s) +
-      '<div class="content">' + renderBlocks(s.blocks) +
+      '<div class="content">' +
+        '<p class="phase">' + icon('flame') + 'Fase ' + (qi + 1) + ' de ' + questionSteps.length + '<b>+' + XP.question + ' XP</b></p>' +
+        renderBlocks(s.blocks) +
         '<div class="opts' + (s.layout === 'grid' ? ' opts--grid' : '') + '" role="radiogroup">' + opts + '</div>' +
       '</div>' +
     '</section>';
@@ -267,7 +292,7 @@
     return '<section class="screen loading">' +
       '<header class="hero__top">' + wordmark() + '</header>' +
       '<div class="ld">' +
-        '<div class="badge badge--spin">' + icon('shield') + '</div>' +
+        '<div class="badge badge--spin">' + icon('zap') + '</div>' +
         '<h2 class="title">' + rich(s.title) + '</h2>' +
         '<div class="group">' +
           '<ul class="ld__list">' + s.items.map(function (t) {
@@ -298,15 +323,85 @@
 
   /* ---------- navegação ---------- */
 
-  function render(i, dir) {
+  function render(i, dir, gain) {
     current = i;
     var s = steps[i];
     app.innerHTML = VIEWS[s.type](s);
     app.firstElementChild.classList.add(dir === 'back' ? 'enter-back' : 'enter');
     window.scrollTo(0, 0);
     busy = false;
+
+    // barra de progresso anima a partir da posição anterior
+    var bar = app.querySelector('.progress span[data-to]');
+    if (bar) {
+      requestAnimationFrame(function () { requestAnimationFrame(function () { bar.style.width = bar.getAttribute('data-to') + '%'; }); });
+      lastPct = Number(bar.getAttribute('data-to'));
+    }
+    if (gain) bumpXp(gain);
+    if (s.type === 'intro') countUpMoney();
+    var cel = app.querySelector('[data-celebrate]');
+    if (cel) setTimeout(function () { burstFrom(cel, 46); }, 350);
     if (s.type === 'loading') runLoading(s);
     track('QuizStep', { step: s.id, index: i });
+  }
+
+  /* ---------- efeitos ---------- */
+
+  function countTo(el, from, to, dur, fmt) {
+    fmt = fmt || String;
+    if (reduceMotion) { el.textContent = fmt(to); return; }
+    var t0 = null;
+    function f(ts) {
+      if (!t0) t0 = ts;
+      var p = Math.min(1, (ts - t0) / dur);
+      var e = 1 - Math.pow(1 - p, 3);
+      el.textContent = fmt(Math.round(from + (to - from) * e));
+      if (p < 1) requestAnimationFrame(f);
+    }
+    requestAnimationFrame(f);
+  }
+
+  function bumpXp(gain) {
+    var chip = app.querySelector('.xp');
+    if (!chip) return;
+    countTo(chip.querySelector('.xp__n'), xp - gain, xp, 700);
+    chip.classList.remove('is-bump'); void chip.offsetWidth; chip.classList.add('is-bump');
+    var f = document.createElement('span');
+    f.className = 'xp__float';
+    f.textContent = '+' + gain + ' XP';
+    chip.appendChild(f);
+    setTimeout(function () { f.remove(); }, 1300);
+  }
+
+  function countUpMoney() {
+    var el = app.querySelector('.hl__line--money .box');
+    if (!el) return;
+    var m = el.textContent.match(/^(\D*)([\d.]+)(.*)$/);
+    if (!m) return;
+    var target = Number(m[2].replace(/\./g, ''));
+    el.style.minWidth = el.offsetWidth + 'px';
+    el.textContent = m[1] + '0' + m[3];
+    setTimeout(function () {
+      countTo(el, 0, target, 1300, function (n) { return m[1] + n + m[3]; });
+      setTimeout(function () { el.classList.add('is-done'); burstFrom(el, 30); }, reduceMotion ? 0 : 1350);
+    }, 450);
+  }
+
+  var CONFETTI = ['#ff6a00', '#ff9f43', '#ffc078', '#ffd8a8', '#2b1a10'];
+  function burstFrom(el, n) {
+    if (reduceMotion || !el) return;
+    var r = el.getBoundingClientRect();
+    var x = r.left + r.width / 2, y = r.top + r.height / 2;
+    for (var i = 0; i < n; i++) {
+      var c = document.createElement('i');
+      var a = Math.random() * Math.PI * 2;
+      var d = 50 + Math.random() * 110;
+      c.className = 'confetti' + (i % 3 === 0 ? ' confetti--round' : '');
+      c.style.cssText = 'left:' + x + 'px;top:' + y + 'px;background:' + CONFETTI[i % CONFETTI.length] +
+        ';--dx:' + (Math.cos(a) * d).toFixed(1) + 'px;--dy:' + (Math.sin(a) * d - 70).toFixed(1) + 'px;--r:' + Math.round(Math.random() * 720 - 360) + 'deg';
+      document.body.appendChild(c);
+      setTimeout(function (node) { return function () { node.remove(); }; }(c), 1200);
+    }
   }
 
   function goTo(i, opts) {
@@ -315,13 +410,21 @@
       if (opts.replace) history.replaceState({ step: i }, '');
       else history.pushState({ step: i }, '');
     } catch (e) {}
-    render(i, opts.dir);
+    render(i, opts.dir, opts.gain);
+  }
+
+  function award(step) {
+    var v = XP[step.type] || 0;
+    if (!v || awarded[step.id]) return 0;
+    awarded[step.id] = v;
+    xp += v;
+    return v;
   }
 
   function next() {
     if (busy || current >= steps.length - 1) return;
     busy = true;
-    goTo(current + 1);
+    goTo(current + 1, { gain: award(steps[current]) });
   }
 
   window.addEventListener('popstate', function (e) {
@@ -357,8 +460,10 @@
       o.classList.toggle('is-on', on);
       o.setAttribute('aria-checked', String(on));
     });
+    el.classList.add('is-pop');
+    burstFrom(el, 16);
     busy = true;
-    setTimeout(function () { busy = false; next(); }, 320);
+    setTimeout(function () { busy = false; next(); }, 520);
   }
 
   function sendAnswers() {
