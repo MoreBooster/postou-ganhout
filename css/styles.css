@@ -13,6 +13,12 @@
   --blue-200: #cddcff;
   --blue-100: #edf2ff;
 
+  /* verde = ganho (dinheiro, checks, botões) */
+  --green: #12a150;
+  --green-600: #0d8642;
+  --green-200: #bdebd0;
+  --green-100: #e8f8ee;
+
   --serif: 'Fraunces', Georgia, 'Times New Roman', serif;
   --sans: 'DM Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
 
@@ -88,6 +94,7 @@ button { cursor: pointer; border: 0; background: none; padding: 0; }
 
 /* ============ Tipografia ============ */
 em { font-style: normal; color: var(--blue); }
+.g { color: var(--green); font-weight: 700; }
 
 .box {
   display: inline-block;
@@ -168,7 +175,8 @@ em { font-style: normal; color: var(--blue); }
   font-weight: 700;
   letter-spacing: -.035em;
   padding: .06em .22em .1em;
-  box-shadow: 0 16px 32px -18px rgba(31, 94, 255, .8);
+  background: var(--green);
+  box-shadow: 0 16px 32px -18px rgba(18, 161, 80, .85);
 }
 
 /* ============ Selo de ícone ============ */
@@ -182,6 +190,8 @@ em { font-style: normal; color: var(--blue); }
 }
 .badge .ico { width: 34px; height: 34px; }
 .badge--solid { background: var(--blue); color: #fff; box-shadow: 0 0 0 8px var(--blue-100); }
+.badge--green { background: var(--green-100); color: var(--green); }
+.badge--solid.badge--green { background: var(--green); color: #fff; box-shadow: 0 0 0 8px var(--green-100); }
 .badge--spin { position: relative; }
 .badge--spin::after {
   content: ''; position: absolute; inset: -7px;
@@ -203,13 +213,13 @@ em { font-style: normal; color: var(--blue); }
   flex: none; display: grid; place-items: center;
   width: 22px; height: 22px;
   border-radius: 50%;
-  background: var(--blue); color: #fff;
+  background: var(--green); color: #fff;
 }
 .checks__ico .ico { width: 14px; height: 14px; stroke-width: 2.6; }
 .checks--no li { color: var(--ink-2); }
 .checks--no .checks__ico { background: var(--blue-100); color: var(--blue); }
 .checks--soft li { color: var(--ink-2); font-weight: 400; }
-.checks--soft .checks__ico { background: transparent; color: var(--blue); border: 1.5px solid var(--blue-200); }
+.checks--soft .checks__ico { background: transparent; color: var(--green); border: 1.5px solid var(--green-200); }
 .checks--cards { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .checks--cards li {
   flex-direction: column; justify-content: center; gap: 10px;
@@ -234,7 +244,7 @@ em { font-style: normal; color: var(--blue); }
   font-variant-numeric: tabular-nums;
 }
 .steps__t { max-width: 28ch; font-size: 16px; font-weight: 500; text-wrap: balance; }
-.steps li:last-child .steps__n { background: var(--blue); color: #fff; }
+.steps li:last-child .steps__n { background: var(--green); color: #fff; }
 .steps li:last-child .steps__t { font-weight: 700; }
 
 /* ============ Mensagem da marca ============ */
@@ -327,6 +337,7 @@ em { font-style: normal; color: var(--blue); }
 }
 
 .tags { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.tags--green .tag { border-color: var(--green-200); background: var(--green-100); color: var(--green-600); font-size: 17px; padding: 9px 18px; }
 .tag {
   padding: 7px 14px;
   border-radius: 999px;
@@ -389,6 +400,11 @@ em { font-style: normal; color: var(--blue); }
 .opt.is-on .opt__check { background: var(--blue); border-color: var(--blue); color: #fff; }
 .opt.is-on .tile { background: #fff; }
 
+.q--green .tile { background: var(--green-100); color: var(--green); }
+.q--green .opt.is-on { border-color: var(--green); background: var(--green-100); }
+.q--green .opt.is-on .opt__check { background: var(--green); border-color: var(--green); }
+.q--green .opt__label { color: var(--ink); }
+
 .opts--grid { display: grid; grid-template-columns: 1fr 1fr; }
 .opts--grid .opt { flex-direction: column; gap: 12px; min-height: 124px; padding: 18px 10px; }
 .opts--grid .opt .tile { position: static; transform: none; width: 50px; height: 50px; }
@@ -407,14 +423,14 @@ em { font-style: normal; color: var(--blue); }
   width: 100%; min-height: 58px;
   padding: 0 22px;
   border-radius: 14px;
-  background: var(--blue); color: #fff;
+  background: var(--green); color: #fff;
   font-size: 17px; font-weight: 700;
   text-decoration: none; text-align: center;
-  box-shadow: 0 12px 24px -14px rgba(31, 94, 255, .9);
+  box-shadow: 0 12px 24px -14px rgba(18, 161, 80, .9);
   transition: transform .15s var(--ease), background .2s;
 }
 .btn:active { transform: scale(.98); }
-@media (hover: hover) { .btn:hover { background: var(--blue-600); } }
+@media (hover: hover) { .btn:hover { background: var(--green-600); } }
 .btn .ico { width: 20px; height: 20px; }
 .btn--wa .ico { width: 22px; height: 22px; }
 .note { margin: 0; font-size: 13px; color: var(--muted); }
@@ -440,7 +456,7 @@ em { font-style: normal; color: var(--blue); }
 }
 .ld__tick .ico { width: 13px; height: 13px; stroke-width: 2.6; }
 .ld__list li.is-active:not(.is-done) .ld__tick { border-color: var(--blue); border-top-color: transparent; animation: spin .8s linear infinite; }
-.ld__list li.is-done .ld__tick { background: var(--blue); border-color: var(--blue); color: #fff; }
+.ld__list li.is-done .ld__tick { background: var(--green); border-color: var(--green); color: #fff; }
 .ld__meter { display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%; }
 .ld__pct { font-family: var(--serif); font-weight: 700; font-size: 40px; line-height: 1; color: var(--blue); font-variant-numeric: tabular-nums; }
 .ld__bar { width: 100%; height: 10px; border-radius: 99px; background: var(--blue-100); overflow: hidden; }

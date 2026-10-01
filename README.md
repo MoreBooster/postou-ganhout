@@ -22,7 +22,8 @@ Cada tela é um item de `steps` em `js/config.js`, formado por blocos (`title`, 
 
 - `*texto*` → destaque azul
 - `[texto]` → texto dentro da caixa azul
-- `(texto)` → círculo desenhado à mão
+- `(texto)` → sublinhado azul
+- `^texto^` → verde de ganho (valores em dinheiro)
 - `{rede}` / `{meta}` → mostra a resposta da pessoa
 
 ## Rastreamento

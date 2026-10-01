@@ -30,11 +30,12 @@
     return s.options[answers[id]].label;
   }
 
-  // {id} → resposta; *x* → destaque; [x] → caixa; (x) → sublinhado
+  // {id} → resposta; *x* → destaque; ^x^ → verde; [x] → caixa; (x) → sublinhado
   function rich(str) {
     var out = esc(String(str || '').replace(/\{([\w-]+)\}/g, function (_, id) { return answerLabel(id) || '—'; }));
     return out
       .replace(/\*(.+?)\*/g, '<em>$1</em>')
+      .replace(/\^(.+?)\^/g, '<span class="g">$1</span>')
       .replace(/\[(.+?)\]/g, '<span class="box">$1</span>')
       .replace(/\((.+?)\)/g, '<span class="mark">$1</span>');
   }
@@ -160,7 +161,7 @@
     highlight: function (b) { return '<div class="highlight">' + rich(b.text) + '</div>'; },
 
     tags: function (b) {
-      return '<div class="tags">' + b.items.map(function (t) { return '<span class="tag">' + rich(t) + '</span>'; }).join('') + '</div>';
+      return '<div class="tags' + (b.green ? ' tags--green' : '') + '">' + b.items.map(function (t) { return '<span class="tag">' + rich(t) + '</span>'; }).join('') + '</div>';
     },
 
     brand: function () {
@@ -168,7 +169,7 @@
     },
 
     art: function (b) {
-      return '<div class="badge' + (b.solid ? ' badge--solid' : '') + '">' + icon(b.icon) + '</div>';
+      return '<div class="badge' + (b.solid ? ' badge--solid' : '') + (b.green ? ' badge--green' : '') + '">' + icon(b.icon) + '</div>';
     }
   };
 
@@ -226,7 +227,7 @@
         '<span class="opt__check">' + icon('check') + '</span>' +
       '</button>';
     }).join('');
-    return '<section class="screen q">' + topbar(s) +
+    return '<section class="screen q' + (s.tone ? ' q--' + s.tone : '') + '">' + topbar(s) +
       '<div class="content">' + renderBlocks(s.blocks) +
         '<div class="opts' + (s.layout === 'grid' ? ' opts--grid' : '') + '" role="radiogroup">' + opts + '</div>' +
       '</div>' +

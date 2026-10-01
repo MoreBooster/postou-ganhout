@@ -5,6 +5,7 @@
  *   *texto*   → destaque em azul (itálico nos títulos)
  *   [texto]   → texto dentro da "caixa" azul
  *   (texto)   → sublinhado azul (use em títulos curtos)
+ *   ^texto^   → verde de ganho (valores em dinheiro)
  *   {id}      → resposta dada na pergunta com esse id (ex.: {rede})
  *
  * Blocos disponíveis (campo `t`):
@@ -30,13 +31,13 @@ window.QUIZ_CONFIG = {
       // size: 'money' → linha do valor em destaque | 'sm' → linha menor
       headline: ['Ganhe até', { text: '[R$300,00]', size: 'money' }, 'por dia', { text: '*apenas postando*', size: 'sm' }, '(vídeo.)'],
       blocks: [
-        { t: 'lead', text: 'Então talvez esteja deixando *dinheiro na mesa* toda vez que posta um vídeo.' },
+        { t: 'lead', text: 'Então talvez esteja deixando ^dinheiro na mesa^ toda vez que posta um vídeo.' },
         { t: 'divider' },
         { t: 'big', text: 'Marcas pagam creators para *postar conteúdos.*' },
         { t: 'checks', items: ['Sem precisar ser famoso.', 'Sem precisar ter 100 mil seguidores.', 'Sem precisar viver de internet.'] },
         { t: 'p', center: true, text: 'Responda *4 perguntas* e veja como entrar nesse mercado.' }
       ],
-      cta: 'Quero ver se posso começar'
+      cta: 'Quero fazer R$300/dia'
     },
 
     /* TELA 02 — MICROCOMPROMISSO */
@@ -56,7 +57,7 @@ window.QUIZ_CONFIG = {
       id: 'rede-ok',
       type: 'info',
       blocks: [
-        { t: 'art', icon: 'checkCircle', solid: true },
+        { t: 'art', icon: 'checkCircle', solid: true, green: true },
         { t: 'title', size: 'xl', text: '[Ótimo.]' },
         { t: 'lead', text: 'Então você já tem *uma das ferramentas* necessárias para começar.' },
         { t: 'highlight', text: 'Mas existe uma segunda parte que muita gente ainda não conhece.' }
@@ -68,6 +69,7 @@ window.QUIZ_CONFIG = {
     {
       id: 'meta',
       type: 'question',
+      tone: 'green',
       blocks: [
         { t: 'kicker', text: 'Se você recebesse por conteúdo…' },
         { t: 'title', text: 'Qual seria sua *primeira meta?*' }
@@ -83,9 +85,9 @@ window.QUIZ_CONFIG = {
       id: 'meta-ok',
       type: 'info',
       blocks: [
-        { t: 'art', icon: 'target' },
+        { t: 'art', icon: 'target', green: true },
         { t: 'title', size: 'xl', text: 'Meta *registrada.*' },
-        { t: 'tags', items: ['{meta}'] },
+        { t: 'tags', green: true, items: ['{meta}'] },
         { t: 'lead', text: 'Agora precisamos verificar uma coisa *importante* sobre seu perfil.' }
       ],
       cta: 'Verificar'
@@ -193,7 +195,7 @@ window.QUIZ_CONFIG = {
       type: 'info',
       blocks: [
         { t: 'title', text: 'Imagina abrir o *celular…*' },
-        { t: 'steps', items: ['Entrar na plataforma.', 'Encontrar oportunidades de marcas.', 'Escolher campanhas compatíveis com seu perfil.', 'Usar seu portfólio para apresentar seu trabalho.', 'Produzir seu conteúdo.', 'Publicar.', 'E poder ser remunerado pelas campanhas em que participar.'] },
+        { t: 'steps', items: ['Entrar na plataforma.', 'Encontrar oportunidades de marcas.', 'Escolher campanhas compatíveis com seu perfil.', 'Usar seu portfólio para apresentar seu trabalho.', 'Produzir seu conteúdo.', 'Publicar.', 'E poder ser ^remunerado^ pelas campanhas em que participar.'] },
         { t: 'highlight', text: 'Tudo começa com sua *estrutura de creator.*' },
         { t: 'checks', items: ['Você já tem o celular.', 'Você já tem a rede social.', 'Você já sabe postar.'] },
         { t: 'big', text: 'Agora falta *profissionalizar essa porra.*' }
@@ -206,7 +208,7 @@ window.QUIZ_CONFIG = {
       id: 'processamento',
       type: 'loading',
       title: 'Preparando seu *acesso…*',
-      items: ['Perfil identificado.', 'Rede social identificada: {rede}.', 'Meta definida: {meta}.', 'Preparando próximos passos.'],
+      items: ['Perfil identificado.', 'Rede social identificada: {rede}.', 'Meta definida: ^{meta}^.', 'Preparando próximos passos.'],
       wait: 'Aguarde…',
       duration: 5000
     },
@@ -217,7 +219,7 @@ window.QUIZ_CONFIG = {
       type: 'info',
       noBack: true,
       blocks: [
-        { t: 'art', icon: 'unlock', solid: true },
+        { t: 'art', icon: 'unlock', solid: true, green: true },
         { t: 'title', text: 'Seu próximo passo está *liberado.*' },
         { t: 'p', text: 'Pelas suas respostas, você já possui *o básico necessário* para começar a estruturar sua presença como creator.' },
         { t: 'p', text: 'Agora você pode conhecer a estrutura da:' },
