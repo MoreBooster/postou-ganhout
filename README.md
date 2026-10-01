@@ -25,12 +25,15 @@ Cada tela é um item de `steps` em `js/config.js`, formado por blocos (`title`, 
 - `(texto)` → sublinhado laranja
 - `^texto^` → laranja forte (valores em dinheiro)
 - `{rede}` / `{meta}` → mostra a resposta da pessoa
-- `{xp}` / `{xptotal}` → XP acumulado / XP máximo do funil
+- `{sim}` / `{simtotal}` → valor atual / valor máximo do simulador
 
 ## Gamificação
 
-Cada pergunta vale 100 XP e cada tela de conteúdo vale 25 XP (ajuste em `XP`, no topo do `js/quiz.js`).
-Nos blocos `art`, use `achievement: 'Texto do selo'` e `celebrate: true` para disparar confete.
+**Simulador de potencial:** o contador do topo soma R$/dia a cada etapa concluída, conforme o campo `sim` de cada etapa no `js/config.js` (hoje 60 + 80 + 60 + 60 + 20 + 20 = R$ 300/dia). Ele aparece sempre identificado como simulação, e a tela final traz um aviso de que não é garantia de ganho. Mantenha esse aviso.
+
+**Avisos de resposta:** o campo `feedback` de cada pergunta mostra um aviso rápido que avança sozinho.
+
+**Conquistas:** nos blocos `art`, use `achievement: 'Texto do selo'` e `celebrate: true` para disparar confete.
 
 ## Rastreamento
 

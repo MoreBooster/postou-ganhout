@@ -7,14 +7,15 @@
   var answers = {};
   var current = 0;
 
-  // gamificação: XP por etapa concluída
-  var XP = { question: 100, info: 25 };
-  var xp = 0;
+  // gamificação: simulador de potencial (R$/dia) — cada etapa soma o valor do campo `sim` no config.
+  // É uma simulação ilustrativa, sempre identificada como tal na tela.
+  var sim = 0;
   var awarded = {};
   var lastPct = 0;
   var reduceMotion = false;
   try { reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
-  var xpTotal = C.steps.reduce(function (t, s) { return t + (XP[s.type] || 0); }, 0);
+  var simTotal = C.steps.reduce(function (t, s) { return t + (s.sim || 0); }, 0);
+  function brl(n) { return 'R$ ' + String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '.'); }
   var busy = false;
 
   var progressSteps = steps.filter(function (s) { return s.type !== 'intro' && s.type !== 'loading'; });
@@ -42,8 +43,8 @@
   // {id} → resposta; *x* → destaque; ^x^ → verde; [x] → caixa; (x) → sublinhado
   function rich(str) {
     var out = esc(String(str || '').replace(/\{([\w-]+)\}/g, function (_, id) {
-      if (id === 'xp') return String(xp);
-      if (id === 'xptotal') return String(xpTotal);
+      if (id === 'sim') return brl(sim);
+      if (id === 'simtotal') return brl(simTotal);
       return answerLabel(id) || '—';
     }));
     return out
@@ -129,6 +130,7 @@
     p: function (b) { return '<p class="p">' + rich(b.text) + '</p>'; },
     big: function (b) { return '<p class="big">' + rich(b.text) + '</p>'; },
     divider: function () { return '<hr class="divider">'; },
+    disclaimer: function (b) { return '<p class="disclaimer">' + rich(b.text) + '</p>'; },
 
     checks: function (b) {
       var v = b.variant || 'yes';
@@ -231,7 +233,9 @@
         ? '<button class="iconbtn" data-action="back" aria-label="Voltar">' + icon('back') + '</button>'
         : '<span class="iconbtn iconbtn--ghost"></span>') +
       '<div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + pct + '"><span style="width:' + lastPct + '%" data-to="' + pct + '"></span></div>' +
-      '<span class="xp" aria-label="Pontos de experiência">' + icon('zap') + '<b class="xp__n">' + xp + '</b><small>XP</small></span>' +
+      '<span class="xp" aria-label="Simulador de potencial: ' + brl(sim) + ' por dia (simulação)">' +
+        '<span class="xp__coin" aria-hidden="true">$</span>' +
+        '<span class="xp__txt"><b class="xp__n">' + brl(sim) + '</b><small>simulação/dia</small></span></span>' +
       '</header>';
   }
 
@@ -274,7 +278,7 @@
     var qi = questionSteps.indexOf(s);
     return '<section class="screen q' + (s.tone ? ' q--' + s.tone : '') + '">' + topbar(s) +
       '<div class="content">' +
-        '<p class="phase">' + icon('flame') + 'Fase ' + (qi + 1) + ' de ' + questionSteps.length + '<b>+' + XP.question + ' XP</b></p>' +
+        '<p class="phase">' + icon('flame') + 'Fase ' + (qi + 1) + ' de ' + questionSteps.length + (s.sim ? '<b>+' + brl(s.sim) + '/dia</b>' : '') + '</p>' +
         renderBlocks(s.blocks) +
         '<div class="opts' + (s.layout === 'grid' ? ' opts--grid' : '') + '" role="radiogroup">' + opts + '</div>' +
       '</div>' +
@@ -364,11 +368,11 @@
   function bumpXp(gain) {
     var chip = app.querySelector('.xp');
     if (!chip) return;
-    countTo(chip.querySelector('.xp__n'), xp - gain, xp, 700);
+    countTo(chip.querySelector('.xp__n'), sim - gain, sim, 900, brl);
     chip.classList.remove('is-bump'); void chip.offsetWidth; chip.classList.add('is-bump');
     var f = document.createElement('span');
     f.className = 'xp__float';
-    f.textContent = '+' + gain + ' XP';
+    f.textContent = '+' + brl(gain) + '/dia';
     chip.appendChild(f);
     setTimeout(function () { f.remove(); }, 1300);
   }
@@ -414,10 +418,10 @@
   }
 
   function award(step) {
-    var v = XP[step.type] || 0;
+    var v = step.sim || 0;
     if (!v || awarded[step.id]) return 0;
     awarded[step.id] = v;
-    xp += v;
+    sim += v;
     return v;
   }
 
@@ -476,7 +480,7 @@
     t.style.setProperty('--dur', dur + 'ms');
     t.innerHTML = '<span class="toast__ico">' + icon('check') + '</span>' +
       '<span class="toast__body"><b>' + rich(s.feedback.title) + '</b><span>' + rich(s.feedback.text) + '</span></span>' +
-      '<span class="toast__xp">+' + (XP[s.type] || 0) + ' XP</span><i class="toast__timer"></i>';
+      (s.sim ? '<span class="toast__xp">+' + brl(s.sim) + '/dia<small>no simulador</small></span>' : '') + '<i class="toast__timer"></i>';
     app.firstElementChild.appendChild(t);
     return dur;
   }
