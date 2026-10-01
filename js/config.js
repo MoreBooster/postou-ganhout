@@ -56,7 +56,7 @@ window.QUIZ_CONFIG = {
       ctaNote: 'Responda 4 perguntas e veja como entrar nesse mercado.'
     },
 
-    /* TELA 02 — MICROCOMPROMISSO */
+    /* PERGUNTA 1 — MICROCOMPROMISSO */
     {
       id: 'rede',
       type: 'question',
@@ -67,21 +67,12 @@ window.QUIZ_CONFIG = {
         { icon: 'tiktok', label: 'TikTok' },
         { icon: 'layers', label: 'Os dois' },
         { icon: 'globe', label: 'Outra rede social' }
-      ]
-    },
-    {
-      id: 'rede-ok',
-      type: 'info',
-      blocks: [
-        { t: 'art', icon: 'checkCircle', solid: true, celebrate: true, achievement: 'Conquista desbloqueada' },
-        { t: 'title', size: 'xl', text: 'Ótimo.' },
-        { t: 'lead', text: 'Então você já tem *uma das ferramentas* necessárias para começar.' },
-        { t: 'highlight', icon: 'lock', text: 'Mas existe uma segunda parte que muita gente ainda não conhece.' }
       ],
-      cta: 'Continuar'
+      // aviso rápido que aparece depois da resposta (sem tela extra)
+      feedback: { title: 'Ótimo!', text: 'Você já tem uma das ferramentas necessárias para começar.' }
     },
 
-    /* TELA 03 — DINHEIRO */
+    /* PERGUNTA 2 — DINHEIRO */
     {
       id: 'meta',
       type: 'question',
@@ -95,21 +86,11 @@ window.QUIZ_CONFIG = {
         { icon: 'cash', label: 'R$200 por dia' },
         { icon: 'wallet', label: 'R$300 por dia' },
         { icon: 'trending', label: 'Quero ir além' }
-      ]
-    },
-    {
-      id: 'meta-ok',
-      type: 'info',
-      blocks: [
-        { t: 'art', icon: 'target', solid: true, celebrate: true, achievement: 'Meta definida' },
-        { t: 'title', size: 'xl', text: 'Meta *registrada.*' },
-        { t: 'tags', accent: true, items: ['{meta}'] },
-        { t: 'lead', text: 'Agora precisamos verificar uma coisa *importante* sobre seu perfil.' }
       ],
-      cta: 'Verificar'
+      feedback: { title: 'Meta registrada: {meta}', text: 'Agora vamos verificar uma coisa importante sobre seu perfil.' }
     },
 
-    /* TELA 04 — OBJEÇÃO DOS SEGUIDORES */
+    /* PERGUNTA 3 — OBJEÇÃO DOS SEGUIDORES */
     {
       id: 'seguidores',
       type: 'question',
@@ -119,28 +100,11 @@ window.QUIZ_CONFIG = {
         { icon: 'bars2', label: '1.000 a 5.000' },
         { icon: 'bars3', label: '5.000 a 10.000' },
         { icon: 'bars4', label: '+10.000' }
-      ]
-    },
-    {
-      id: 'seguidores-ok',
-      type: 'info',
-      blocks: [
-        { t: 'art', icon: 'trending', achievement: 'Obstáculo superado' },
-        { t: 'title', text: 'Isso *não te impede* de começar.' },
-        {
-          t: 'group',
-          blocks: [
-            { t: 'p', text: 'Você não precisa necessariamente ser um grande influencer para trabalhar como creator.' },
-            { t: 'divider' },
-            { t: 'p', text: 'Marcas também podem buscar *pessoas comuns* para produzir e divulgar conteúdos.' }
-          ]
-        },
-        { t: 'highlight', icon: 'arrowDown', text: 'O número de seguidores é apenas uma parte. O próximo ponto é *muito mais importante.*' }
       ],
-      cta: 'Descobrir'
+      feedback: { title: 'Isso não te impede de começar.', text: 'Marcas também buscam pessoas comuns para produzir e divulgar conteúdos.' }
     },
 
-    /* TELA 05 — GAP */
+    /* PERGUNTA 4 — GAP */
     {
       id: 'portfolio',
       type: 'question',
@@ -159,15 +123,15 @@ window.QUIZ_CONFIG = {
       ]
     },
 
-    /* TELA 06 — DOR */
+    /* O PROBLEMA — dor + segundo gap */
     {
-      id: 'dor',
+      id: 'problema',
       type: 'info',
       blocks: [
         { t: 'title', text: 'É aqui que muita gente *perde força.*' },
         { t: 'versus', pre: 'Porque uma coisa é', from: 'Postar na internet', mid: 'Outra é', to: 'Se apresentar como creator' },
         {
-          t: 'group', label: 'Uma marca precisa conseguir entender rapidamente',
+          t: 'group', label: 'Uma marca precisa entender rapidamente',
           blocks: [
             {
               t: 'checks', variant: 'rows',
@@ -175,27 +139,9 @@ window.QUIZ_CONFIG = {
             }
           ]
         },
-        { t: 'highlight', solid: true, icon: 'folder', text: 'É por isso que existe o portfólio de creator.' }
-      ],
-      cta: 'Entendi'
-    },
-
-    /* TELA 07 — SEGUNDO GAP */
-    {
-      id: 'gap2',
-      type: 'info',
-      blocks: [
+        { t: 'highlight', solid: true, icon: 'folder', text: 'É por isso que existe o portfólio de creator.' },
         { t: 'kicker', text: 'Mas ainda existe outro problema…' },
-        {
-          t: 'checks', variant: 'cards',
-          items: [
-            { icon: 'folder', text: 'Você pode ter um portfólio lindo.' },
-            { icon: 'link', text: 'Pode ter domínio.' },
-            { icon: 'instagram', text: 'Pode ter Instagram organizado.' },
-            { icon: 'video', text: 'Pode saber gravar.' }
-          ]
-        },
-        { t: 'title', text: 'Mas pra quem você vai *mostrar?*' },
+        { t: 'title', size: 'sm', text: 'Pra quem você vai *mostrar?*' },
         {
           t: 'group', tone: 'muted',
           blocks: [
@@ -207,86 +153,63 @@ window.QUIZ_CONFIG = {
       cta: 'Mostrar como funciona'
     },
 
-    /* TELA 08 — BIG REVEAL */
+    /* A SOLUÇÃO — big reveal + visualização */
     {
-      id: 'reveal',
+      id: 'solucao',
       type: 'info',
       blocks: [
         { t: 'kicker', text: 'Conheça a' },
         { t: 'brand' },
         { t: 'lead', text: 'Uma estrutura criada para *conectar creators* ao mercado de marcas.' },
         {
-          t: 'group', label: 'Ao entrar, você poderá ter',
-          blocks: [
-            {
-              t: 'features',
-              items: [
-                { icon: 'monitor', title: 'Seu próprio site', text: 'Sua vitrine profissional como creator.' },
-                { icon: 'link', title: 'Seu próprio domínio', text: 'Um endereço para apresentar seu trabalho.' },
-                { icon: 'folder', title: 'Seu portfólio digital', text: 'Seus conteúdos organizados profissionalmente.' }
-              ]
-            }
+          t: 'checks', variant: 'cards',
+          items: [
+            { icon: 'monitor', text: 'Seu próprio site' },
+            { icon: 'link', text: 'Seu próprio domínio' },
+            { icon: 'folder', text: 'Seu portfólio digital' },
+            { icon: 'phone', text: 'App Postou Ganhou' }
           ]
         },
-        { t: 'kicker', text: 'E o principal' },
-        { t: 'stat', label: 'Acesso ao app Postou Ganhou', pre: 'Um ecossistema com', value: '+1.000', unit: 'marcas brasileiras', text: 'e oportunidades para creators encontrarem campanhas e trabalhos disponíveis na plataforma.' },
-        { t: 'title', size: 'sm', text: 'Não é *só um site.*' },
-        { t: 'versus', pre: 'É uma estrutura para você sair do', from: '“Eu posto vídeos.”', mid: 'E começar a se apresentar como', to: '“Eu sou creator.”' }
-      ],
-      cta: 'Quero meu acesso'
-    },
-
-    /* TELA 09 — VISUALIZAÇÃO */
-    {
-      id: 'visualizacao',
-      type: 'info',
-      blocks: [
-        { t: 'title', text: 'Imagina abrir o *celular…*' },
-        { t: 'steps', items: ['Entrar na plataforma.', 'Encontrar oportunidades de marcas.', 'Escolher campanhas compatíveis com seu perfil.', 'Usar seu portfólio para apresentar seu trabalho.', 'Produzir seu conteúdo.', 'Publicar.', 'E poder ser ^remunerado^ pelas campanhas em que participar.'] },
-        {
-          t: 'group',
-          blocks: [
-            { t: 'big', text: 'Tudo começa com sua *estrutura de creator.*' },
-            {
-              t: 'checks', variant: 'tiles',
-              items: [
-                { icon: 'phone', text: 'Você já tem o celular.' },
-                { icon: 'users', text: 'Você já tem a rede social.' },
-                { icon: 'video', text: 'Você já sabe postar.' }
-              ]
-            }
-          ]
-        },
-        { t: 'big', text: 'Agora falta *profissionalizar essa porra.*' }
+        { t: 'stat', label: 'E o principal: o app', pre: 'Um ecossistema com', value: '+1.000', unit: 'marcas brasileiras', text: 'e oportunidades para creators encontrarem campanhas e trabalhos disponíveis na plataforma.' },
+        { t: 'title', size: 'sm', text: 'Imagina abrir o *celular…*' },
+        { t: 'steps', items: ['Encontrar oportunidades de marcas.', 'Escolher campanhas compatíveis com seu perfil.', 'Usar seu portfólio para se apresentar.', 'Produzir e publicar seu conteúdo.', 'E poder ser ^remunerado^ pelas campanhas em que participar.'] },
+        { t: 'big', text: 'Você já tem o celular, a rede social e sabe postar. Agora falta *profissionalizar essa porra.*' }
       ],
       cta: 'Preparar minha estrutura'
     },
 
-    /* TELA 10 — PROCESSAMENTO */
+    /* PROCESSAMENTO */
     {
       id: 'processamento',
       type: 'loading',
       title: 'Preparando seu *acesso…*',
       items: ['Perfil identificado.', 'Rede social identificada: {rede}.', 'Meta definida: ^{meta}^.', 'Preparando próximos passos.'],
       wait: 'Aguarde…',
-      duration: 5000
+      duration: 4200
     },
 
-    /* TELA 11 — RESULTADO */
+    /* RESULTADO + CTA */
     {
-      id: 'resultado',
-      type: 'info',
+      id: 'cta',
+      type: 'final',
       noBack: true,
       blocks: [
-        { t: 'art', icon: 'unlock', solid: true, celebrate: true, achievement: 'Nível desbloqueado' },
+        { t: 'art', icon: 'trophy', solid: true, celebrate: true, achievement: 'Nível Creator' },
         { t: 'tags', accent: true, items: ['+{xp} XP acumulados'] },
         { t: 'title', text: 'Seu próximo passo está *liberado.*' },
         { t: 'p', text: 'Pelas suas respostas, você já possui *o básico necessário* para começar a estruturar sua presença como creator.' },
         {
-          t: 'group', label: 'Agora você pode conhecer a estrutura da',
+          t: 'checks', variant: 'tiles',
+          items: [
+            { icon: 'video', text: 'Você já posta.' },
+            { icon: 'phone', text: 'Você já tem o celular.' },
+            { icon: 'users', text: 'Você já tem a rede social.' }
+          ]
+        },
+        { t: 'title', size: 'sm', text: 'Agora falta transformar isso em uma *estrutura de creator.*' },
+        {
+          t: 'group', label: 'Seu acesso Postou Ganhou inclui',
           blocks: [
-            { t: 'brand', size: 'sm' },
-            { t: 'p', text: 'Você poderá ter acesso a:' },
             {
               t: 'checks', variant: 'cards',
               items: [
@@ -298,41 +221,7 @@ window.QUIZ_CONFIG = {
             }
           ]
         },
-        { t: 'p', text: 'Uma estrutura para apresentar seu conteúdo profissionalmente e encontrar oportunidades disponíveis para creators.' }
-      ],
-      cta: 'Ver como liberar'
-    },
-
-    /* TELA 12 — CTA */
-    {
-      id: 'cta',
-      type: 'final',
-      blocks: [
-        { t: 'art', icon: 'trophy', solid: true, celebrate: true, achievement: 'Nível Creator' },
-        {
-          t: 'checks', variant: 'tiles',
-          items: [
-            { icon: 'video', text: 'Você já posta.' },
-            { icon: 'phone', text: 'Você já tem o celular.' },
-            { icon: 'users', text: 'Você já tem a rede social.' }
-          ]
-        },
-        { t: 'title', text: 'Agora falta transformar isso em uma *estrutura de creator.*' },
-        { t: 'p', text: 'Clique abaixo e fale com nossa equipe para conhecer as condições e liberar sua estrutura *Postou Ganhou.*' },
-        {
-          t: 'group', label: 'Seu acesso inclui',
-          blocks: [
-            {
-              t: 'checks', variant: 'cards',
-              items: [
-                { icon: 'monitor', text: 'Site' },
-                { icon: 'link', text: 'Domínio' },
-                { icon: 'folder', text: 'Portfólio' },
-                { icon: 'phone', text: 'App Postou Ganhou' }
-              ]
-            }
-          ]
-        }
+        { t: 'p', text: 'Clique abaixo e fale com nossa equipe para conhecer as condições e liberar sua estrutura *Postou Ganhou.*' }
       ],
       cta: 'Resgatar meu acesso agora',
       note: 'Você será direcionado para o WhatsApp.'

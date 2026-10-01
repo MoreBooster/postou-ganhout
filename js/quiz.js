@@ -463,7 +463,22 @@
     el.classList.add('is-pop');
     burstFrom(el, 16);
     busy = true;
-    setTimeout(function () { busy = false; next(); }, 520);
+    var wait = s.feedback ? showToast(s) : 520;
+    setTimeout(function () { busy = false; if (steps[current] === s) next(); }, wait);
+  }
+
+  // aviso rápido depois da resposta: substitui telas de retorno e avança sozinho
+  function showToast(s) {
+    var dur = reduceMotion ? 1600 : 2300;
+    var t = document.createElement('div');
+    t.className = 'toast';
+    t.setAttribute('role', 'status');
+    t.style.setProperty('--dur', dur + 'ms');
+    t.innerHTML = '<span class="toast__ico">' + icon('check') + '</span>' +
+      '<span class="toast__body"><b>' + rich(s.feedback.title) + '</b><span>' + rich(s.feedback.text) + '</span></span>' +
+      '<span class="toast__xp">+' + (XP[s.type] || 0) + ' XP</span><i class="toast__timer"></i>';
+    app.firstElementChild.appendChild(t);
+    return dur;
   }
 
   function sendAnswers() {
